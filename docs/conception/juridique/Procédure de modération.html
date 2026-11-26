@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Procédure de modération</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --lime-dark: #5C6B0A; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --refuse: #A32D2D; --refuse-bg: #FAEAEA; --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.05; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 32px; }
+
+  /* Cover */
+  .cover { background: var(--navy); color: #F2F4F7; padding: 88px 0 64px; }
+  .cover .kicker { font-family: 'Space Mono'; font-size: 13px; color: #9FB6CE; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .cover h1 { font-size: 42px; margin: 0 0 14px; color: #fff; }
+  .cover p { font-size: 16px; color: #B9C4D2; max-width: 620px; margin: 0; }
+  .cover .meta { margin-top: 32px; display: flex; gap: 28px; flex-wrap: wrap; }
+  .cover .meta div { font-size: 12.5px; color: #8FA5BC; }
+  .cover .meta b { display: block; color: #F2F4F7; font-family: 'Space Mono'; font-size: 13.5px; margin-bottom: 2px; }
+
+  .toc { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); padding: 14px 0; overflow-x: auto; white-space: nowrap; }
+  .toc a { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; font-family: 'Space Mono'; text-transform: uppercase; letter-spacing: 0.3px; margin-right: 22px; }
+  .toc a:hover { color: var(--orange); }
+
+  section.block { padding: 64px 0; border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 680px; margin-bottom: 36px; }
+  .section-head .kicker { font-family: 'Space Mono'; font-size: 12.5px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px; }
+  .section-head h2 { font-size: 28px; margin: 0 0 12px; }
+  .section-head p { color: var(--ink-soft); font-size: 15px; margin: 0; }
+
+  .callout { display: flex; gap: 14px; align-items: flex-start; border-radius: 8px; padding: 18px 22px; margin-bottom: 28px; font-size: 14px; }
+  .callout svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+  .callout-protect { background: var(--protect-bg); border: 1px solid #D3CBF0; color: #4A3D96; }
+  .callout-warn { background: var(--warn-bg); border: 1px solid #E8D4A8; color: var(--warn); }
+  .callout b { display: block; margin-bottom: 4px; font-size: 14.5px; }
+
+  /* Roles */
+  .role-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 24px 26px; margin-bottom: 16px; }
+  .role-card h4 { font-size: 15px; margin: 0 0 8px; font-family: 'Inter'; font-weight: 700; text-transform: none; }
+  .role-card p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* Category table */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  th { text-align: left; font-family: 'Space Mono'; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); padding: 10px 14px; border-bottom: 2px solid var(--ink); }
+  td { padding: 14px; font-size: 13.5px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .cat-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; display: inline-block; white-space: nowrap; }
+  .cat-mineur { background: var(--protect); color: #fff; }
+  .cat-standard { background: var(--panel); color: var(--ink); }
+  .delay-tag { font-family: 'Space Mono'; font-size: 12px; font-weight: 700; }
+  .delay-urgent { color: var(--protect); }
+  .delay-normal { color: var(--ink-soft); }
+
+  /* Sanction ladder */
+  .ladder { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .rung { display: grid; grid-template-columns: 44px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .rung:last-child { border-bottom: none; }
+  .rung .step-n { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Anton'; font-size: 16px; flex-shrink: 0; }
+  .rung.s1 .step-n { background: var(--warn-bg); color: var(--warn); }
+  .rung.s2 .step-n { background: #FDE6D4; color: var(--orange-dark); }
+  .rung.s3 .step-n { background: var(--refuse-bg); color: var(--refuse); }
+  .rung.s4 .step-n { background: var(--ink); color: #fff; }
+  .rung h4 { margin: 0 0 6px; font-size: 15.5px; font-family: 'Inter'; font-weight: 700; text-transform: none; }
+  .rung .desc { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  .rung .trigger { font-size: 12.5px; background: var(--panel); border-radius: 6px; padding: 10px 14px; }
+  .rung .trigger b { font-family: 'Space Mono'; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); display: block; margin-bottom: 4px; }
+
+  /* PHAROS flow */
+  .flow-steps-v { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .flow-step { display: grid; grid-template-columns: 32px 1fr; gap: 18px; position: relative; padding-bottom: 28px; }
+  .flow-step:last-child { padding-bottom: 0; }
+  .flow-step::before { content: ""; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: var(--line); }
+  .flow-step:last-child::before { display: none; }
+  .flow-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--protect); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton'; font-size: 13px; z-index: 1; }
+  .flow-step h4 { margin: 0 0 6px; font-size: 14.5px; font-family: 'Inter'; font-weight: 700; text-transform: none; }
+  .flow-step p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* Solo note */
+  .solo-box { background: #fff; border: 1px dashed var(--line); border-radius: 8px; padding: 22px 24px; margin-top: 24px; }
+  .solo-box .tag { font-family: 'Space Mono'; font-size: 11px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 10px; }
+  .solo-box p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* RGPD retention */
+  .retention-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .retention-row:last-child { border-bottom: none; }
+  .retention-row .k { font-weight: 600; }
+  .retention-row .v { font-family: 'Space Mono'; font-size: 12.5px; color: var(--ink-soft); }
+
+  footer { padding: 44px 0; text-align: center; }
+  footer p { font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 720px) {
+    .cover h1 { font-size: 30px; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    td { border-bottom: none; padding: 4px 14px; }
+    tr { border-bottom: 1px solid var(--line); padding: 14px 0; }
+    td::before { content: attr(data-label); display: block; font-family: 'Space Mono'; font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 3px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">Document interne — v1.0</div>
+    <h1>Procédure de modération</h1>
+    <p>Ce document définit comment un signalement est traité sur HandMatch, quels délais s'appliquent, quelles sanctions correspondent à quels comportements, et comment s'articule le signalement PHAROS. Il conditionne le contenu des CGU et du back-office de modération.</p>
+    <div class="meta">
+      <div><b>Portée</b>Modération interne + circuit PHAROS</div>
+      <div><b>Opérateur actuel</b>Thibault (modérateur unique)</div>
+      <div><b>Statut</b>Document de travail, à ajuster avec les retours beta</div>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="wrap">
+    <a href="#roles">Rôles</a>
+    <a href="#categories">Catégories & délais</a>
+    <a href="#sanctions">Grille de sanctions</a>
+    <a href="#pharos">Circuit PHAROS</a>
+    <a href="#tracabilite">Traçabilité & RGPD</a>
+  </div>
+</div>
+
+<!-- ROLES -->
+<section class="block" id="roles">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">01 — Qui fait quoi</span>
+      <h2>Rôles et responsabilités</h2>
+      <p>Au lancement de la beta, un seul rôle de modérateur existe. La procédure est écrite pour ce cas, avec une note sur ce qui devra évoluer si l'équipe grandit.</p>
+    </div>
+
+    <div class="role-card">
+      <h4>Modérateur (Thibault, au lancement)</h4>
+      <p>Consulte la file de signalements, décide de l'action (classement sans suite, avertissement, restriction, suspension), et déclenche un signalement PHAROS si le contenu l'exige. Seul habilité à revenir sur une sanction.</p>
+    </div>
+    <div class="role-card">
+      <h4>Signalant (tout utilisateur)</h4>
+      <p>Peut signaler un profil, une offre ou un message depuis n'importe quel écran. Reçoit une notification une fois le signalement traité (sans détail sur la sanction exacte appliquée, pour ne pas exposer d'information sur un tiers).</p>
+    </div>
+    <div class="role-card">
+      <h4>Parent ou tuteur (profil mineur)</h4>
+      <p>Peut signaler à la place de son enfant ou en complément. Un signalement émis par un parent concernant le profil de son enfant déclenche automatiquement la priorité mineur (voir section 2), qu'importe le type de contenu signalé.</p>
+    </div>
+
+    <div class="solo-box">
+      <span class="tag">À anticiper si l'équipe grandit</span>
+      <p>Cette procédure suppose un modérateur unique avec autorité totale sur toute décision. Si un deuxième modérateur rejoint le projet, il faudra ajouter : une règle d'attribution des signalements, un principe de double validation pour les suspensions de compte club (impact business plus lourd qu'un compte joueur), et un accès en lecture seule aux décisions de l'autre modérateur pour garder une cohérence de traitement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES & DELAIS -->
+<section class="block" id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">02 — Catégories & délais</span>
+      <h2>Priorisation des signalements</h2>
+      <p>Tout signalement impliquant un profil mineur — comme sujet ou comme signalant — remonte automatiquement en tête de file, indépendamment de son type.</p>
+    </div>
+
+    <div class="callout callout-protect">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+      <div><b>Règle de priorité absolue</b>Un signalement "mineur" passe toujours avant un signalement standard, même si ce dernier est arrivé plus tôt dans la file. Le modérateur consulte la file par ordre de priorité, pas par ordre chronologique.</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Catégorie</th><th>Exemples</th><th>Priorité</th><th>Délai cible</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Catégorie"><span class="cat-tag cat-mineur">Mineur</span></td>
+          <td data-label="Exemples">Comportement suspect envers un profil mineur, tentative de contact hors cadre, contenu inapproprié visible par un mineur</td>
+          <td data-label="Priorité">Immédiate</td>
+          <td data-label="Délai"><span class="delay-tag delay-urgent">&lt; 2h</span></td>
+        </tr>
+        <tr>
+          <td data-label="Catégorie"><span class="cat-tag cat-standard">Profil / Comportement</span></td>
+          <td data-label="Exemples">Photo inappropriée, harcèlement, propos injurieux, usurpation d'identité</td>
+          <td data-label="Priorité">Haute</td>
+          <td data-label="Délai"><span class="delay-tag delay-normal">&lt; 24h</span></td>
+        </tr>
+        <tr>
+          <td data-label="Catégorie"><span class="cat-tag cat-standard">Club / FFHB</span></td>
+          <td data-label="Exemples">Numéro d'affiliation suspect, usurpation d'un club existant</td>
+          <td data-label="Priorité">Haute</td>
+          <td data-label="Délai"><span class="delay-tag delay-normal">&lt; 24h</span></td>
+        </tr>
+        <tr>
+          <td data-label="Catégorie"><span class="cat-tag cat-standard">Offre</span></td>
+          <td data-label="Exemples">Offre trompeuse, fictive, ou discriminatoire</td>
+          <td data-label="Priorité">Normale</td>
+          <td data-label="Délai"><span class="delay-tag delay-normal">&lt; 48h</span></td>
+        </tr>
+        <tr>
+          <td data-label="Catégorie"><span class="cat-tag cat-standard">Autre</span></td>
+          <td data-label="Exemples">Signalement ambigu, doublon, information incomplète</td>
+          <td data-label="Priorité">Normale</td>
+          <td data-label="Délai"><span class="delay-tag delay-normal">&lt; 72h</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn" style="margin-top: 28px">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#B37B12" stroke-width="1.5"/><path d="M10 6.5v4" stroke="#B37B12" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#B37B12"/></svg>
+      <div><b>Ces délais sont des cibles de démarrage</b>Avec un seul modérateur, un délai de 2h implique une disponibilité quasi continue pour les cas mineurs. À ajuster selon ta réalité de disponibilité — mieux vaut un délai réaliste et tenu qu'un délai ambitieux et souvent dépassé.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SANCTIONS -->
+<section class="block" id="sanctions">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">03 — Grille de sanctions</span>
+      <h2>Quatre paliers de réponse</h2>
+      <p>La sanction dépend de la gravité du comportement, pas uniquement de la catégorie du signalement. Un premier écart mineur peut rester au palier 1 même sur un cas prioritaire ; un comportement grave peut sauter directement au palier 3 ou 4.</p>
+    </div>
+
+    <div class="ladder">
+      <div class="rung s1">
+        <div class="step-n">1</div>
+        <div>
+          <h4>Avertissement</h4>
+          <div class="desc">Message envoyé au compte concerné, rappelant la règle enfreinte. Aucune restriction fonctionnelle. Reste dans l'historique du compte.</div>
+          <div class="trigger"><b>Déclenché quand</b>Premier écart, gravité faible à modérée (ex. profil incomplet trompeur, ton déplacé isolé), pas de risque pour un mineur.</div>
+        </div>
+      </div>
+      <div class="rung s2">
+        <div class="step-n">2</div>
+        <div>
+          <h4>Restriction temporaire</h4>
+          <div class="desc">Le compte reste actif mais perd temporairement une capacité précise : contact direct désactivé, offre dépubliée le temps d'une vérification, recherche de profils désactivée pour un club. Durée définie au cas par cas (typiquement 7 jours).</div>
+          <div class="trigger"><b>Déclenché quand</b>Récidive après avertissement, ou premier écart de gravité plus marquée (ex. contact insistant après refus, offre douteuse à corriger).</div>
+        </div>
+      </div>
+      <div class="rung s3">
+        <div class="step-n">3</div>
+        <div>
+          <h4>Suspension</h4>
+          <div class="desc">Compte désactivé, profil invisible, connexion impossible. Réversible sur décision du modérateur après examen. L'utilisateur reçoit le motif général de la suspension.</div>
+          <div class="trigger"><b>Déclenché quand</b>Comportement grave envers un tiers, tentative de contact hors cadre avec un profil mineur, récidive après restriction, numéro FFHB frauduleux confirmé.</div>
+        </div>
+      </div>
+      <div class="rung s4">
+        <div class="step-n">4</div>
+        <div>
+          <h4>Suppression définitive</h4>
+          <div class="desc">Compte et contenu associé supprimés selon les règles de conservation RGPD (voir section 5). Non réversible. Réservé aux cas les plus graves.</div>
+          <div class="trigger"><b>Déclenché quand</b>Contenu illégal, danger avéré pour un mineur (déclenche systématiquement aussi un signalement PHAROS), récidive après suspension.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHAROS -->
+<section class="block" id="pharos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">04 — Circuit PHAROS</span>
+      <h2>Une démarche distincte de la modération interne</h2>
+      <p>Le signalement PHAROS est une obligation légale, indépendante de l'action de modération choisie. Un modérateur peut suspendre un compte sans signaler à PHAROS, et inversement — même si dans les cas les plus graves, les deux se déclenchent ensemble.</p>
+    </div>
+
+    <div class="callout callout-protect">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+      <div><b>Quand PHAROS est systématiquement déclenché</b>Contenu à caractère pédopornographique, mise en danger avérée d'un mineur, contenu faisant l'apologie de violences graves. Dans le doute sur la qualification, signaler quand même — PHAROS est l'organisme compétent pour trancher, pas HandMatch.</div>
+    </div>
+
+    <div class="flow-steps-v">
+      <div class="flow-step">
+        <div class="flow-dot">1</div>
+        <div>
+          <h4>Le modérateur identifie un contenu potentiellement concerné</h4>
+          <p>Lors du traitement d'un signalement, quel que soit le palier de sanction choisi en parallèle.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">2</div>
+        <div>
+          <h4>Capture et conservation des preuves avant toute suppression</h4>
+          <p>Le contenu signalé est conservé (capture d'écran horodatée, identifiants du compte) avant suppression du compte, pour pouvoir être transmis à PHAROS.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">3</div>
+        <div>
+          <h4>Dépôt du signalement sur la plateforme PHAROS</h4>
+          <p>Depuis le back-office, action séparée de la sanction de modération. Le signalement est déposé par le modérateur en tant que représentant de HandMatch.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot">4</div>
+        <div>
+          <h4>Journalisation interne</h4>
+          <p>La date et la référence du signalement PHAROS sont notées dans l'historique du compte, sans détail du contenu, pour garder une trace en cas de demande des autorités.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACABILITE -->
+<section class="block" style="border-bottom: none" id="tracabilite">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">05 — Traçabilité & RGPD</span>
+      <h2>Durée de conservation des données de modération</h2>
+      <p>Cohérent avec le principe de durée de conservation limitée déjà posé dans la note de cadrage juridique (section 3.1).</p>
+    </div>
+
+    <div class="retention-row">
+      <span class="k">Signalement classé sans suite</span>
+      <span class="v">Conservé 6 mois, puis anonymisé</span>
+    </div>
+    <div class="retention-row">
+      <span class="k">Avertissement / restriction</span>
+      <span class="v">Conservé 12 mois dans l'historique du compte</span>
+    </div>
+    <div class="retention-row">
+      <span class="k">Suspension</span>
+      <span class="v">Conservé tant que le compte existe, + 12 mois après suppression</span>
+    </div>
+    <div class="retention-row">
+      <span class="k">Signalement PHAROS (référence)</span>
+      <span class="v">Conservé 5 ans (délai de prescription pénale usuel)</span>
+    </div>
+    <div class="retention-row">
+      <span class="k">Contenu capturé avant suppression</span>
+      <span class="v">Conservé uniquement le temps nécessaire au traitement PHAROS, puis supprimé</span>
+    </div>
+
+    <div class="callout callout-warn" style="margin-top: 28px">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#B37B12" stroke-width="1.5"/><path d="M10 6.5v4" stroke="#B37B12" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#B37B12"/></svg>
+      <div><b>Durées à faire valider</b>Ces durées sont des points de départ raisonnables, pas des obligations légales strictes sauf mention contraire — à faire confirmer avec le professionnel qui relira tes CGU et ta politique de confidentialité.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>HandMatch — Procédure de modération v1.0 · Document de travail, à ajuster avec les retours de la phase beta et la relecture juridique</p>
+</footer>
+
+</body>
+</html>

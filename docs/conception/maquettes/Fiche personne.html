@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Fiche détaillée profil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --lime-dark: #5C6B0A; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-sub { text-align: center; margin-bottom: 40px; font-size: 14px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 300px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+  .app-body { padding: 36px 40px 40px; }
+
+  .profile-head { display: flex; gap: 20px; align-items: center; margin-bottom: 8px; }
+  .ph-photo { width: 88px; height: 88px; border-radius: 50%; background: var(--panel);
+    display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 12px; flex-shrink: 0; }
+  .profile-head h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 22px; margin: 0 0 6px; }
+  .profile-head .sub { font-size: 13.5px; color: var(--ink-soft); }
+  .avail-chip {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--ok-bg); color: var(--ok);
+    font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px; margin-top: 8px;
+  }
+  .avail-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 28px 0; }
+  .info-row { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .info-row .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); margin-bottom: 4px; }
+  .info-row .v { font-size: 14px; font-weight: 600; }
+
+  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; margin: 0 0 14px; }
+
+  .career-list { list-style: none; margin: 0 0 28px; padding: 0; }
+  .career-list li {
+    display: flex; justify-content: space-between; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--line);
+  }
+  .career-list li:last-child { border-bottom: none; }
+  .career-list .club-name { font-weight: 600; }
+  .career-list .years { color: var(--ink-soft); font-size: 12.5px; }
+
+  .extra-box {
+    background: var(--panel); border-radius: 8px; padding: 16px 18px; font-size: 13.5px; color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+
+  .contact-box {
+    border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; display: flex;
+    align-items: center; justify-content: space-between; margin-bottom: 8px;
+  }
+  .contact-box .t-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .contact-box .t-sub { font-size: 12px; color: var(--ink-soft); }
+  .btn { display: inline-block; padding: 11px 20px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-outline { border: 1px solid var(--line); color: var(--ink); background: transparent; }
+
+  .report-link { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft);
+    justify-content: center; padding-top: 20px; margin-top: 12px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 600px) {
+    .info-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Fiche détaillée — profil joueur</div>
+  <div class="flow-sub">Vue publique consultée par un club, ici pour un profil majeur</div>
+
+  <div class="browser">
+    <div class="browser-bar">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="url">handmatch.fr/profil/karim-m</div>
+    </div>
+    <div class="app-nav">
+      <div class="logo">
+        <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+        HandMatch
+      </div>
+      <div class="right">
+        <span>AS Handball Rouen</span>
+        <div class="avatar">AR</div>
+      </div>
+    </div>
+
+    <div class="app-body">
+      <div class="profile-head">
+        <div class="ph-photo">Photo</div>
+        <div>
+          <h3>Karim M.</h3>
+          <div class="sub">24 ans · Ailier gauche · Rouen (12 km)</div>
+          <div class="avail-chip"><span class="dot"></span>En recherche active</div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-row"><div class="k">Poste</div><div class="v">Ailier gauche</div></div>
+        <div class="info-row"><div class="k">Mobilité</div><div class="v">30 km</div></div>
+        <div class="info-row"><div class="k">Localisation</div><div class="v">Rouen</div></div>
+        <div class="info-row"><div class="k">Niveau recherché</div><div class="v">Régionale 1 / 2</div></div>
+        <div class="info-row"><div class="k">Email</div><div class="v">karim.m@exemple.fr</div></div>
+        <div class="info-row"><div class="k">Téléphone</div><div class="v">06 •• •• •• 42</div></div>
+      </div>
+
+      <div class="section-title">Historique des clubs</div>
+      <ul class="career-list">
+        <li><span class="club-name">AS Elbeuf</span><span class="years">2023 – 2026</span></li>
+        <li><span class="club-name">US Sotteville Handball</span><span class="years">2019 – 2023</span></li>
+      </ul>
+
+      <div class="section-title">À propos</div>
+      <div class="extra-box">
+        Vient de déménager pour son travail et cherche un club plus proche de Rouen. Disponible pour les entraînements en semaine dès la reprise de saison.
+      </div>
+
+      <div class="contact-box">
+        <div>
+          <div class="t-title">Contacter Karim</div>
+          <div class="t-sub">Profil majeur — contact direct possible</div>
+        </div>
+        <button class="btn btn-primary">Envoyer un message</button>
+      </div>
+
+      <div class="report-link">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 2v16M4 3h11l-2 3 2 3H4" stroke="#3A5470" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Signaler ce profil ou un comportement suspect
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Maquette parcours club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F;
+    --ink-soft: #3A5470;
+    --paper: #FBFAF7;
+    --panel: #F0EEE7;
+    --line: #D8D4C8;
+    --orange: #FF5A1F;
+    --orange-dark: #B33D12;
+    --lime: #C6E21E;
+    --lime-dark: #5C6B0A;
+    --navy: #10263F;
+    --ok: #2F7D4F;
+    --ok-bg: #E7F3EA;
+    --warn: #B37B12;
+    --warn-bg: #FBF1DD;
+    --refuse: #A32D2D;
+    --refuse-bg: #FAEAEA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-steps { display: flex; justify-content: center; gap: 10px; margin-bottom: 56px; flex-wrap: wrap; }
+  .flow-steps span {
+    font-size: 12px; padding: 6px 12px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .flow-steps span.active { background: var(--orange); color: #fff; border-color: var(--orange); font-weight: 600; }
+
+  .screen-block { margin-bottom: 72px; }
+  .screen-label {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;
+  }
+  .screen-label .n {
+    font-family: 'Anton', sans-serif; font-size: 20px; color: var(--orange); width: 32px; flex-shrink: 0;
+  }
+  .screen-label h2 { font-size: 20px; margin: 0; }
+  .screen-label p { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+  .browser {
+    background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08);
+    border: 1px solid var(--line);
+  }
+  .browser-bar {
+    background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url {
+    margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 260px;
+  }
+  .app-nav {
+    display: flex; align-items: center; justify-content: space-between; padding: 14px 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+  .app-body { padding: 36px 40px; }
+
+  /* Form screen */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 640px; margin: 0 auto; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.span2 { grid-column: 1 / -1; }
+  .field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .field .hint { font-size: 12px; color: var(--ink-soft); }
+  .field input, .field select, .field textarea {
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 5px; font-size: 14px;
+    font-family: 'Inter', sans-serif; background: #FCFBF8;
+  }
+  .verify-box {
+    display: flex; align-items: flex-start; gap: 10px; background: var(--ok-bg);
+    border: 1px solid #BFE0C9; border-radius: 6px; padding: 12px 14px; margin-top: 4px;
+    grid-column: 1 / -1; font-size: 13px; color: var(--ok);
+  }
+  .verify-box .icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+  .form-cta { text-align: center; margin-top: 28px; }
+  .btn {
+    display: inline-block; padding: 12px 26px; border-radius: 4px;
+    font-family: 'Anton', sans-serif; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;
+    border: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn-sm { padding: 7px 14px; font-size: 11px; }
+
+  /* Dashboard screen */
+  .dash-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .dash-head h3 { font-size: 18px; margin: 0; text-transform: none; font-family: 'Inter'; font-weight: 700; }
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .kpi { background: var(--panel); border-radius: 8px; padding: 16px 18px; }
+  .kpi .v { font-family: 'Anton', sans-serif; font-size: 26px; color: var(--navy); }
+  .kpi .l { font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  .offer-card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .offer-card .meta h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; font-family: 'Inter'; }
+  .offer-card .meta span { font-size: 13px; color: var(--ink-soft); }
+  .badge { font-size: 11px; padding: 4px 10px; border-radius: 100px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .badge-active { background: var(--ok-bg); color: var(--ok); }
+
+  /* Candidatures screen */
+  .cand-row {
+    display: grid; grid-template-columns: 44px 1.4fr 1fr 1fr auto; align-items: center; gap: 14px;
+    padding: 14px 4px; border-bottom: 1px solid var(--line); font-size: 14px;
+  }
+  .cand-row.head { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
+  .cand-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--panel); color: var(--ink);
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .cand-name { font-weight: 600; }
+  .cand-sub { font-size: 12px; color: var(--ink-soft); }
+  .status { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; text-align: center; }
+  .status-pending { background: var(--warn-bg); color: var(--warn); }
+  .status-accepted { background: var(--ok-bg); color: var(--ok); }
+  .status-refused { background: var(--refuse-bg); color: var(--refuse); }
+  .row-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 30px; height: 30px; border-radius: 5px; border: 1px solid var(--line); background: #fff;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Parcours club</div>
+  <div class="flow-steps">
+    <span class="active">1. Inscription & vérification</span>
+    <span>2. Tableau de bord</span>
+    <span>3. Gestion des candidatures</span>
+  </div>
+
+  <!-- SCREEN 1 : Inscription -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">01</div>
+      <div>
+        <h2>Inscription du club</h2>
+        <p>Le numéro d'affiliation FFHB est vérifié avant activation du compte.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/inscription-club</div>
+      </div>
+      <div class="app-body">
+        <h3 style="text-align:center; font-family:'Inter'; font-weight:700; text-transform:none; font-size:20px; margin:0 0 28px;">Créer le profil de votre club</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Nom du club</label>
+            <input type="text" placeholder="Ex. Association Sportive Handball Rouen" value="AS Handball Rouen">
+          </div>
+          <div class="field">
+            <label>Ville</label>
+            <input type="text" placeholder="Ex. Rouen" value="Rouen">
+          </div>
+          <div class="field span2">
+            <label>Numéro d'affiliation FFHB</label>
+            <span class="hint">Disponible sur votre espace fédéral, format 0000000</span>
+            <input type="text" placeholder="Ex. 7601234" value="7601234">
+          </div>
+          <div class="verify-box">
+            <svg class="icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#2F7D4F" stroke-width="1.5"/><path d="M6 10l3 3 5-6" stroke="#2F7D4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div>Numéro FFHB reconnu — AS Handball Rouen, Régionale 1. Votre profil sera activé après validation finale.</div>
+          </div>
+          <div class="field">
+            <label>Équipes / niveaux</label>
+            <select><option>Régionale 1, U18, U15</option></select>
+          </div>
+          <div class="field">
+            <label>Email de contact</label>
+            <input type="email" placeholder="contact@ashrouen.fr" value="contact@ashrouen.fr">
+          </div>
+        </div>
+        <div class="form-cta">
+          <button class="btn btn-primary">Créer mon profil club</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 : Dashboard -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">02</div>
+      <div>
+        <h2>Tableau de bord du club</h2>
+        <p>Vue d'ensemble des offres publiées et accès rapide à une nouvelle publication.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/club/tableau-de-bord</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+        <div class="right">
+          <span>AS Handball Rouen</span>
+          <div class="avatar">AR</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="dash-head">
+          <h3>Vos offres de recrutement</h3>
+          <button class="btn btn-primary btn-sm">+ Publier une offre</button>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="v mono">3</div><div class="l">Offres actives</div></div>
+          <div class="kpi"><div class="v mono">12</div><div class="l">Candidatures reçues</div></div>
+          <div class="kpi"><div class="v mono">2</div><div class="l">En attente de réponse</div></div>
+        </div>
+        <div class="offer-card">
+          <div class="meta">
+            <h4>Ailier gauche — Séniors Régionale 1</h4>
+            <span>Publiée le 3 juillet · 5 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+        <div class="offer-card">
+          <div class="meta">
+            <h4>Entraîneur — Équipe U15</h4>
+            <span>Publiée le 28 juin · 4 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+        <div class="offer-card">
+          <div class="meta">
+            <h4>Gardien de but — Séniors Régionale 1</h4>
+            <span>Publiée le 15 juin · 3 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 : Candidatures -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">03</div>
+      <div>
+        <h2>Gestion des candidatures</h2>
+        <p>Le club consulte, accepte ou refuse chaque candidature reçue pour une offre donnée.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/club/offres/ailier-gauche/candidatures</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+        <div class="right">
+          <span>AS Handball Rouen</span>
+          <div class="avatar">AR</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="dash-head">
+          <h3>Ailier gauche — Séniors Régionale 1</h3>
+          <span class="badge badge-active">Active</span>
+        </div>
+        <div class="cand-row head">
+          <span></span><span>Candidat</span><span>Mobilité</span><span>Statut</span><span></span>
+        </div>
+        <div class="cand-row">
+          <div class="cand-avatar">KM</div>
+          <div><div class="cand-name">Karim M.</div><div class="cand-sub">24 ans · Ailier gauche</div></div>
+          <div class="cand-sub">25 km</div>
+          <span class="status status-pending">En attente</span>
+          <div class="row-actions">
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-9" stroke="#2F7D4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+        </div>
+        <div class="cand-row">
+          <div class="cand-avatar">TL</div>
+          <div><div class="cand-name">Thomas L.</div><div class="cand-sub">21 ans · Ailier gauche / droit</div></div>
+          <div class="cand-sub">40 km</div>
+          <span class="status status-accepted">Acceptée</span>
+          <div class="row-actions">
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </div>
+        </div>
+        <div class="cand-row">
+          <div class="cand-avatar">NB</div>
+          <div><div class="cand-name">Nadia B.</div><div class="cand-sub">19 ans · Ailier gauche</div></div>
+          <div class="cand-sub">12 km</div>
+          <span class="status status-refused">Refusée</span>
+          <div class="row-actions">
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </div>
+        </div>
+        <div class="cand-row">
+          <div class="cand-avatar">YS</div>
+          <div><div class="cand-name">Yanis S.</div><div class="cand-sub">17 ans · Ailier gauche</div></div>
+          <div class="cand-sub">8 km</div>
+          <span class="status status-pending">En attente</span>
+          <div class="row-actions">
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-9" stroke="#2F7D4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="icon-btn"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

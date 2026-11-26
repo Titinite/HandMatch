@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Maquette recherche joueurs (vue club)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F;
+    --ink-soft: #3A5470;
+    --paper: #FBFAF7;
+    --panel: #F0EEE7;
+    --line: #D8D4C8;
+    --orange: #FF5A1F;
+    --orange-dark: #B33D12;
+    --lime: #C6E21E;
+    --lime-dark: #5C6B0A;
+    --navy: #10263F;
+    --ok: #2F7D4F;
+    --ok-bg: #E7F3EA;
+    --warn: #B37B12;
+    --warn-bg: #FBF1DD;
+    --protect: #5C4AB7;
+    --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-steps { display: flex; justify-content: center; gap: 10px; margin-bottom: 56px; flex-wrap: wrap; }
+  .flow-steps span {
+    font-size: 12px; padding: 6px 12px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .flow-steps span.active { background: var(--orange); color: #fff; border-color: var(--orange); font-weight: 600; }
+
+  .screen-block { margin-bottom: 72px; }
+  .screen-label { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .screen-label .n { font-family: 'Anton', sans-serif; font-size: 20px; color: var(--orange); width: 32px; flex-shrink: 0; }
+  .screen-label h2 { font-size: 20px; margin: 0; }
+  .screen-label p { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 320px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .app-body { padding: 36px 40px; }
+
+  /* Search layout */
+  .search-layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; }
+  .filters { border-right: 1px solid var(--line); padding-right: 24px; }
+  .filters h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); margin: 0 0 14px; font-family: 'Inter'; font-weight: 700; }
+  .filter-group { margin-bottom: 20px; }
+  .filter-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .filter-group select, .filter-group input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font-size: 13px; background: #FCFBF8; }
+  .filter-group .checks { display: flex; flex-direction: column; gap: 8px; }
+  .filter-group .checks label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; margin: 0; }
+  .filter-reset { font-size: 12px; color: var(--ink-soft); text-decoration: underline; cursor: pointer; }
+
+  .results-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .results-count { font-size: 13px; color: var(--ink-soft); }
+  .results-sort { font-size: 12px; display: flex; align-items: center; gap: 8px; color: var(--ink-soft); }
+  .results-sort select { border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; font-size: 12px; background: #fff; }
+
+  .result-card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; margin-bottom: 14px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .result-card.protected { border-color: #D3CBF0; background: var(--protect-bg); }
+  .r-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--panel); color: var(--ink);
+    display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .result-card.protected .r-avatar { background: #E1DAF5; color: var(--protect); }
+  .r-meta { flex: 1; }
+  .r-meta h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; font-family: 'Inter'; display: flex; align-items: center; gap: 8px; }
+  .r-meta .r-sub { font-size: 13px; color: var(--ink-soft); }
+  .r-meta .tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .r-meta .tags span { font-size: 11px; background: var(--panel); padding: 3px 9px; border-radius: 100px; color: var(--ink-soft); }
+  .result-card.protected .r-meta .tags span { background: #E1DAF5; color: #4A3D96; }
+  .mini-badge {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+    background: var(--protect); color: #fff; padding: 3px 8px; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .mini-badge svg { width: 10px; height: 10px; }
+  .r-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; flex-shrink: 0; width: 168px; }
+  .btn { display: inline-block; padding: 10px 18px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; text-align: center; }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn-protect { background: var(--protect); color: #fff; }
+  .btn-protect-outline { background: transparent; border: 1px solid #C7BCEB; color: var(--protect); }
+
+  .disponible-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); display: inline-block; }
+
+  .note-box {
+    display: flex; gap: 10px; align-items: flex-start; background: var(--protect-bg);
+    border: 1px solid #D3CBF0; border-radius: 6px; padding: 12px 14px; font-size: 12.5px; color: #4A3D96;
+    margin-bottom: 20px;
+  }
+  .note-box svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Recherche de profils — vue club</div>
+  <div class="flow-steps">
+    <span class="active">Recherche & filtres</span>
+    <span>Résultats</span>
+  </div>
+
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">+</div>
+      <div>
+        <h2>Recherche de joueurs / entraîneurs</h2>
+        <p>Un club filtre les profils disponibles pour trouver un candidat correspondant à un poste ouvert, sans forcément passer par une offre publiée.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/club/recherche-profils</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+        <div class="right">
+          <span>AS Handball Rouen</span>
+          <div class="avatar">AR</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="note-box">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+          <div>Certains résultats correspondent à des profils mineurs. Leurs informations sont partiellement masquées et toute prise de contact passe par un parent ou tuteur.</div>
+        </div>
+
+        <div class="search-layout">
+          <div class="filters">
+            <h4>Filtres</h4>
+            <div class="filter-group">
+              <label>Poste</label>
+              <select><option>Ailier gauche</option></select>
+            </div>
+            <div class="filter-group">
+              <label>Localisation</label>
+              <input type="text" value="Rouen">
+            </div>
+            <div class="filter-group">
+              <label>Rayon</label>
+              <input type="text" value="30 km">
+            </div>
+            <div class="filter-group">
+              <label>Âge</label>
+              <select><option>Tous âges</option></select>
+            </div>
+            <div class="filter-group">
+              <label>Niveau</label>
+              <select><option>Toutes</option></select>
+            </div>
+            <div class="filter-group">
+              <div class="checks">
+                <label><input type="checkbox" checked> En recherche active</label>
+                <label><input type="checkbox"> Entraîneurs / bénévoles</label>
+              </div>
+            </div>
+            <div class="filter-reset">Réinitialiser les filtres</div>
+          </div>
+
+          <div>
+            <div class="results-head">
+              <div class="results-count">14 profils correspondent à votre recherche</div>
+              <div class="results-sort">
+                Trier par
+                <select><option>Pertinence</option></select>
+              </div>
+            </div>
+
+            <div class="result-card">
+              <div class="r-avatar">KM</div>
+              <div class="r-meta">
+                <h4><span class="disponible-dot"></span> Karim M.</h4>
+                <div class="r-sub">24 ans · Ailier gauche · Rouen</div>
+                <div class="tags"><span>12 km</span><span>Régionale 2</span><span>Disponible</span></div>
+              </div>
+              <div class="r-actions">
+                <button class="btn btn-primary">Voir le profil</button>
+                <button class="btn btn-outline">Contacter</button>
+              </div>
+            </div>
+
+            <div class="result-card">
+              <div class="r-avatar">TL</div>
+              <div class="r-meta">
+                <h4><span class="disponible-dot"></span> Thomas L.</h4>
+                <div class="r-sub">21 ans · Ailier gauche / droit · Sotteville</div>
+                <div class="tags"><span>8 km</span><span>Régionale 1</span><span>Disponible</span></div>
+              </div>
+              <div class="r-actions">
+                <button class="btn btn-primary">Voir le profil</button>
+                <button class="btn btn-outline">Contacter</button>
+              </div>
+            </div>
+
+            <div class="result-card protected">
+              <div class="r-avatar">YS</div>
+              <div class="r-meta">
+                <h4>Yanis S. <span class="mini-badge"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" fill="#fff"/></svg>Mineur</span></h4>
+                <div class="r-sub">17 ans · Ailier gauche · Localisation approximative (± 10 km)</div>
+                <div class="tags"><span>U18</span><span>Régionale 2</span><span>Contact via parent</span></div>
+              </div>
+              <div class="r-actions">
+                <button class="btn btn-protect">Voir le profil</button>
+                <button class="btn btn-protect-outline">Contacter le parent</button>
+              </div>
+            </div>
+
+            <div class="result-card">
+              <div class="r-avatar">NB</div>
+              <div class="r-meta">
+                <h4>Nadia B.</h4>
+                <div class="r-sub">19 ans · Ailier gauche · Elbeuf</div>
+                <div class="tags"><span>18 km</span><span>Nationale 3</span></div>
+              </div>
+              <div class="r-actions">
+                <button class="btn btn-primary">Voir le profil</button>
+                <button class="btn btn-outline">Contacter</button>
+              </div>
+            </div>
+
+            <div class="result-card protected">
+              <div class="r-avatar">LM</div>
+              <div class="r-meta">
+                <h4>Léa M. <span class="mini-badge"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" fill="#fff"/></svg>Mineure</span></h4>
+                <div class="r-sub">14 ans · Ailier gauche · Localisation approximative (± 15 km)</div>
+                <div class="tags"><span>U15</span><span>Départementale</span><span>Contact via parent</span></div>
+              </div>
+              <div class="r-actions">
+                <button class="btn btn-protect">Voir le profil</button>
+                <button class="btn btn-protect-outline">Contacter le parent</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

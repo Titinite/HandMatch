@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Politique de confidentialité (brouillon)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --refuse: #A32D2D; --refuse-bg: #FAEAEA; --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .display { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.05; }
+  h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 17px; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 32px; }
+
+  .cover { background: var(--navy); color: #F2F4F7; padding: 80px 0 56px; }
+  .cover .kicker { font-family: 'Space Mono'; font-size: 12.5px; color: #9FB6CE; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .cover h1 { font-size: 36px; margin: 0 0 14px; color: #fff; }
+  .cover p { font-size: 15px; color: #B9C4D2; max-width: 600px; margin: 0; }
+
+  .draft-banner { background: var(--refuse-bg); border-bottom: 2px solid var(--refuse); padding: 18px 0; }
+  .draft-banner .wrap { display: flex; gap: 14px; align-items: flex-start; }
+  .draft-banner svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+  .draft-banner b { display: block; color: var(--refuse); font-size: 14px; margin-bottom: 3px; }
+  .draft-banner p { margin: 0; font-size: 13.5px; color: #7A2323; }
+
+  .toc { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); padding: 12px 0; overflow-x: auto; white-space: nowrap; }
+  .toc a { font-size: 12px; font-weight: 600; color: var(--ink-soft); text-decoration: none; font-family: 'Space Mono'; text-transform: uppercase; letter-spacing: 0.3px; margin-right: 18px; }
+  .toc a:hover { color: var(--orange); }
+
+  .doc-body { padding: 56px 0 80px; }
+
+  article.art { margin-bottom: 44px; padding-bottom: 44px; border-bottom: 1px solid var(--line); }
+  article.art:last-child { border-bottom: none; }
+  article.art .art-num { font-family: 'Space Mono'; font-size: 12px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px; }
+  article.art h2 { font-size: 22px; margin: 0 0 18px; }
+  article.art p { font-size: 14.5px; color: var(--ink); margin: 0 0 14px; }
+  article.art ul { padding-left: 20px; margin: 0 0 14px; }
+  article.art li { font-size: 14.5px; margin-bottom: 8px; }
+
+  .sub-h { font-size: 14px; font-weight: 700; margin: 20px 0 10px; }
+
+  .note-inline { display: flex; gap: 10px; align-items: flex-start; border-radius: 6px; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+  .note-inline svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .note-protect { background: var(--protect-bg); color: #4A3D96; }
+  .note-legal { background: var(--warn-bg); color: var(--warn); }
+  .note-ok { background: var(--ok-bg); color: var(--ok); }
+
+  /* Data table */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th { text-align: left; font-family: 'Space Mono'; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); padding: 10px 12px; border-bottom: 2px solid var(--ink); }
+  td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  .retention-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; gap: 12px; }
+  .retention-row:last-child { border-bottom: none; }
+  .retention-row .k { font-weight: 600; }
+  .retention-row .v { font-family: 'Space Mono'; font-size: 12px; color: var(--ink-soft); text-align: right; flex-shrink: 0; }
+
+  .rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .right-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .right-card .t { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .right-card .d { font-size: 12.5px; color: var(--ink-soft); }
+
+  .signature-block { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px; margin-top: 8px; font-size: 13.5px; color: var(--ink-soft); }
+
+  footer { padding: 44px 0; text-align: center; }
+  footer p { font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 700px) {
+    .rights-grid { grid-template-columns: 1fr; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    td { border-bottom: none; padding: 3px 12px; }
+    tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
+    td::before { content: attr(data-label); display: block; font-family: 'Space Mono'; font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">Brouillon de travail — v0.1</div>
+    <h1>Politique de confidentialité</h1>
+    <p>HandMatch — traitement des données personnelles conformément au RGPD</p>
+  </div>
+</div>
+
+<div class="draft-banner">
+  <div class="wrap">
+    <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#A32D2D" stroke-width="1.5"/><path d="M10 6v4.5" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="#A32D2D"/></svg>
+    <div>
+      <b>Brouillon de travail — pas un document juridique valide</b>
+      <p>Ce texte sert de base de discussion et doit être relu et validé par un avocat avant toute mise en ligne, même en beta fermée. Certains champs restent à compléter (identité de l'éditeur, hébergeur, DPO le cas échéant).</p>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="wrap">
+    <a href="#art1">1. Responsable</a>
+    <a href="#art2">2. Données collectées</a>
+    <a href="#art3">3. Finalités</a>
+    <a href="#art4">4. Base légale</a>
+    <a href="#art5">5. Mineurs</a>
+    <a href="#art6">6. Conservation</a>
+    <a href="#art7">7. Destinataires</a>
+    <a href="#art8">8. Vos droits</a>
+    <a href="#art9">9. Sécurité</a>
+    <a href="#art10">10. Contact</a>
+  </div>
+</div>
+
+<div class="doc-body">
+  <div class="wrap">
+
+    <article class="art" id="art1">
+      <span class="art-num">Article 1</span>
+      <h2>Responsable du traitement</h2>
+      <p>Le responsable du traitement des données collectées sur la Plateforme HandMatch est [Nom de l'auto-entrepreneur, une fois immatriculé], joignable à l'adresse [email de contact dédié à définir].</p>
+      <p>Les données sont hébergées au sein de l'Union européenne, chez [nom de l'hébergeur à définir une fois le choix technique arrêté].</p>
+    </article>
+
+    <article class="art" id="art2">
+      <span class="art-num">Article 2</span>
+      <h2>Données collectées</h2>
+      <p>HandMatch applique un principe de minimisation : seules les données nécessaires au fonctionnement du service sont collectées.</p>
+
+      <table>
+        <thead><tr><th>Type de compte</th><th>Données collectées</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-label="Compte">Joueur / entraîneur / bénévole</td>
+            <td data-label="Données">Nom, prénom, email, téléphone, âge, localisation, mobilité, historique de clubs, poste, disponibilité, photo (facultative)</td>
+          </tr>
+          <tr>
+            <td data-label="Compte">Club</td>
+            <td data-label="Données">Nom du club, numéro d'affiliation FFHB, ville, date de création, équipes/niveaux, email de contact, logo (facultatif)</td>
+          </tr>
+          <tr>
+            <td data-label="Compte">Parent / tuteur (profil mineur)</td>
+            <td data-label="Données">Email, lien de parenté déclaré, historique des autorisations données</td>
+          </tr>
+          <tr>
+            <td data-label="Compte">Tous comptes</td>
+            <td data-label="Données">Données de connexion (horodatage, adresse IP), historique des candidatures, signalements émis ou reçus</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+    <article class="art" id="art3">
+      <span class="art-num">Article 3</span>
+      <h2>Finalités du traitement</h2>
+      <ul>
+        <li>Permettre la création et la gestion d'un profil utilisateur ou club</li>
+        <li>Faciliter la mise en relation entre clubs, joueurs et entraîneurs (recherche, candidature, suivi)</li>
+        <li>Vérifier l'authenticité d'un club via son numéro d'affiliation FFHB</li>
+        <li>Assurer la modération de la Plateforme et le traitement des signalements</li>
+        <li>Respecter les obligations légales de HandMatch, notamment en matière de protection des mineurs</li>
+        <li>Améliorer le service à partir de statistiques d'usage agrégées</li>
+      </ul>
+      <p>Aucune donnée n'est utilisée à des fins de publicité ciblée ou revendue à des tiers.</p>
+    </article>
+
+    <article class="art" id="art4">
+      <span class="art-num">Article 4</span>
+      <h2>Base légale du traitement</h2>
+      <p>Le traitement des données d'un compte utilisateur repose sur :</p>
+      <ul>
+        <li><strong>L'exécution du contrat</strong> — fournir le service demandé lors de l'inscription (création de profil, mise en relation)</li>
+        <li><strong>Le consentement</strong> — notamment pour l'utilisation d'une photo de profil, ou le traitement des données d'un mineur de moins de 15 ans (voir Article 5)</li>
+        <li><strong>L'intérêt légitime</strong> — pour la modération de la Plateforme et la prévention des comportements frauduleux</li>
+        <li><strong>L'obligation légale</strong> — pour le signalement de certains contenus aux autorités compétentes (PHAROS)</li>
+      </ul>
+    </article>
+
+    <article class="art" id="art5">
+      <span class="art-num">Article 5</span>
+      <h2>Traitement des données d'un mineur</h2>
+      <p>Pour un utilisateur de moins de 15 ans, le traitement de ses données repose sur le consentement explicite d'un parent ou tuteur légal, recueilli avant toute activation du profil.</p>
+
+      <div class="note-inline note-protect">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+        Ce consentement est distinct de l'autorisation d'utilisation d'une image, qui suit un régime juridique séparé et plus strict que le RGPD. Les deux sont demandées séparément lors du parcours de validation parentale.
+      </div>
+
+      <p>Le profil d'un mineur bénéficie de mesures de protection renforcées : localisation approximative plutôt que précise, téléphone non affiché publiquement, contact encadré passant systématiquement par le parent ou tuteur.</p>
+      <p>Le parent ou tuteur peut à tout moment consulter, rectifier ou demander la suppression des données de l'enfant, en contactant HandMatch à l'adresse indiquée à l'Article 10.</p>
+    </article>
+
+    <article class="art" id="art6">
+      <span class="art-num">Article 6</span>
+      <h2>Durée de conservation</h2>
+      <p>Les données sont conservées le temps nécessaire aux finalités pour lesquelles elles ont été collectées, selon les durées suivantes :</p>
+
+      <div class="retention-row"><span class="k">Compte actif (joueur, club, entraîneur)</span><span class="v">Durée de vie du compte</span></div>
+      <div class="retention-row"><span class="k">Compte inactif</span><span class="v">Anonymisation après 24 mois sans connexion</span></div>
+      <div class="retention-row"><span class="k">Compte supprimé (à la demande de l'utilisateur)</span><span class="v">Suppression sous 30 jours, hors obligations légales</span></div>
+      <div class="retention-row"><span class="k">Signalement classé sans suite</span><span class="v">6 mois, puis anonymisé</span></div>
+      <div class="retention-row"><span class="k">Historique de modération (avertissement, suspension)</span><span class="v">12 mois après suppression du compte</span></div>
+      <div class="retention-row"><span class="k">Référence d'un signalement PHAROS</span><span class="v">5 ans</span></div>
+      <div class="retention-row"><span class="k">Données de connexion</span><span class="v">12 mois, conformément aux obligations légales usuelles</span></div>
+
+      <div class="note-inline note-legal">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#B37B12" stroke-width="1.5"/><path d="M10 6.5v4" stroke="#B37B12" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#B37B12"/></svg>
+        Ces durées reprennent celles fixées dans la procédure de modération interne, pour rester cohérentes entre les deux documents. À faire confirmer avec le professionnel qui relira ce texte.
+      </div>
+    </article>
+
+    <article class="art" id="art7">
+      <span class="art-num">Article 7</span>
+      <h2>Destinataires des données</h2>
+      <p>Les données sont accessibles :</p>
+      <ul>
+        <li>À l'équipe de modération de HandMatch, dans le cadre strict de ses missions</li>
+        <li>Aux autres utilisateurs de la Plateforme, dans la limite des informations rendues publiques sur un profil (et selon les règles de visibilité restreinte pour un profil mineur)</li>
+        <li>À l'hébergeur technique de la Plateforme, situé au sein de l'Union européenne</li>
+        <li>Aux autorités compétentes, uniquement dans le cadre d'une obligation légale (ex. signalement PHAROS, réquisition judiciaire)</li>
+      </ul>
+      <p>Aucune donnée n'est transférée hors de l'Union européenne à ce stade.</p>
+    </article>
+
+    <article class="art" id="art8">
+      <span class="art-num">Article 8</span>
+      <h2>Vos droits</h2>
+      <p>Conformément au RGPD, chaque utilisateur dispose des droits suivants sur ses données :</p>
+
+      <div class="rights-grid">
+        <div class="right-card"><div class="t">Droit d'accès</div><div class="d">Obtenir une copie des données vous concernant</div></div>
+        <div class="right-card"><div class="t">Droit de rectification</div><div class="d">Corriger une donnée inexacte ou incomplète</div></div>
+        <div class="right-card"><div class="t">Droit à l'effacement</div><div class="d">Demander la suppression de vos données</div></div>
+        <div class="right-card"><div class="t">Droit à la portabilité</div><div class="d">Récupérer vos données dans un format réutilisable</div></div>
+        <div class="right-card"><div class="t">Droit d'opposition</div><div class="d">Vous opposer à un traitement, sous conditions</div></div>
+        <div class="right-card"><div class="t">Droit de réclamation</div><div class="d">Saisir la CNIL en cas de désaccord persistant</div></div>
+      </div>
+
+      <p>Pour exercer l'un de ces droits, contactez HandMatch à l'adresse indiquée à l'Article 10. Une réponse est apportée sous un délai maximal d'un mois, conformément au RGPD.</p>
+      <p>Pour un profil mineur, ces droits sont exercés par le parent ou tuteur légal.</p>
+    </article>
+
+    <article class="art" id="art9">
+      <span class="art-num">Article 9</span>
+      <h2>Sécurité des données</h2>
+      <p>HandMatch met en œuvre des mesures techniques et organisationnelles pour protéger les données des utilisateurs, notamment :</p>
+      <ul>
+        <li>Hashage des mots de passe</li>
+        <li>Chiffrement des échanges entre le navigateur et le serveur (HTTPS)</li>
+        <li>Accès aux données de modération restreint à l'équipe habilitée</li>
+      </ul>
+      <p>En cas de violation de données susceptible d'engendrer un risque pour les droits et libertés des utilisateurs, HandMatch notifie la CNIL sous 72 heures, conformément au RGPD, et informe les utilisateurs concernés si le risque est élevé.</p>
+    </article>
+
+    <article class="art" id="art10">
+      <span class="art-num">Article 10</span>
+      <h2>Contact et réclamation</h2>
+      <p>Pour toute question relative au traitement de vos données, ou pour exercer l'un de vos droits, vous pouvez contacter HandMatch à l'adresse suivante : [email de contact dédié à définir].</p>
+      <p>Si vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la Commission Nationale de l'Informatique et des Libertés (CNIL) : <span class="mono">www.cnil.fr</span>.</p>
+    </article>
+
+    <div class="signature-block">
+      <strong style="color:var(--ink)">Points laissés en suspens dans ce brouillon, à trancher avant relecture juridique :</strong><br><br>
+      — Identité légale complète du responsable de traitement (dépend de l'immatriculation)<br>
+      — Choix de l'hébergeur (impacte l'Article 1 et l'Article 7)<br>
+      — Adresse email dédiée à l'exercice des droits RGPD<br>
+      — Registre des traitements complet (document séparé, format tableau simplifié suffisant à ce stade selon la note de cadrage)
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>HandMatch — Politique de confidentialité v0.1 · Brouillon de travail, non publiable en l'état</p>
+</footer>
+
+</body>
+</html>

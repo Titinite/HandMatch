@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Charte graphique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F;
+    --ink-soft: #3A5470;
+    --paper: #FBFAF7;
+    --panel: #F0EEE7;
+    --line: #D8D4C8;
+    --orange: #FF5A1F;
+    --orange-dark: #B33D12;
+    --lime: #C6E21E;
+    --lime-dark: #5C6B0A;
+    --navy: #10263F;
+    --ok: #2F7D4F;
+    --ok-bg: #E7F3EA;
+    --warn: #B37B12;
+    --warn-bg: #FBF1DD;
+    --refuse: #A32D2D;
+    --refuse-bg: #FAEAEA;
+    --protect: #5C4AB7;
+    --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+  /* Cover */
+  .cover {
+    background: var(--navy); color: #F2F4F7; padding: 96px 0 72px;
+    position: relative; overflow: hidden;
+  }
+  .cover .kicker {
+    font-family: 'Space Mono', monospace; font-size: 13px; color: #9FB6CE;
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px;
+  }
+  .cover h1 { font-size: 52px; margin: 0 0 16px; color: #fff; }
+  .cover p { font-size: 17px; color: #B9C4D2; max-width: 560px; margin: 0; }
+  .cover .meta { margin-top: 40px; display: flex; gap: 32px; flex-wrap: wrap; }
+  .cover .meta div { font-size: 13px; color: #8FA5BC; }
+  .cover .meta b { display: block; color: #F2F4F7; font-family: 'Space Mono', monospace; font-size: 14px; margin-bottom: 2px; }
+
+  /* Sticky nav */
+  .toc {
+    position: sticky; top: 0; z-index: 10; background: var(--paper);
+    border-bottom: 1px solid var(--line); padding: 14px 0;
+  }
+  .toc .wrap { display: flex; gap: 24px; flex-wrap: wrap; }
+  .toc a {
+    font-size: 13px; font-weight: 600; color: var(--ink-soft); text-decoration: none;
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .toc a:hover { color: var(--orange); }
+
+  section.block { padding: 80px 0; border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 680px; margin-bottom: 44px; }
+  .section-head .kicker {
+    font-family: 'Space Mono', monospace; font-size: 13px; color: var(--orange-dark);
+    text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px;
+  }
+  .section-head h2 { font-size: 32px; margin: 0 0 14px; }
+  .section-head p { color: var(--ink-soft); font-size: 15.5px; margin: 0; }
+
+  /* Logo section */
+  .logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 24px; }
+  .logo-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 40px 32px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 200px;
+  }
+  .logo-card.dark { background: var(--navy); }
+  .logo-card .label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; align-self: flex-start; }
+  .logo-card.dark .label { color: #8FA5BC; }
+  .lockup { display: flex; align-items: center; gap: 12px; }
+  .lockup svg { width: 40px; height: 40px; flex-shrink: 0; }
+  .lockup span { font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: 1px; }
+  .lockup.stacked { flex-direction: column; gap: 10px; }
+
+  .dont-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 28px; }
+  .dont-card {
+    border: 1px solid var(--refuse); background: var(--refuse-bg); border-radius: 8px; padding: 24px 16px;
+    text-align: center; position: relative;
+  }
+  .dont-card .icon-x {
+    position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--refuse); color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .dont-card .demo { height: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .dont-card .demo svg { width: 34px; height: 34px; }
+  .dont-card p { font-size: 12.5px; color: var(--ink-soft); margin: 0; }
+
+  .clearspace-box {
+    background: var(--panel); border: 1px dashed var(--line); border-radius: 8px; padding: 48px;
+    display: flex; align-items: center; justify-content: center; margin-top: 8px;
+  }
+  .clearspace-inner { position: relative; padding: 24px; border: 1px dashed var(--orange-dark); }
+  .clearspace-inner svg { width: 56px; height: 56px; display: block; }
+  .clearspace-inner .x-label {
+    position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--orange-dark);
+  }
+
+  .minsize-row { display: flex; align-items: flex-end; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+  .minsize-item { text-align: center; }
+  .minsize-item .label { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ink-soft); margin-top: 8px; }
+
+  /* Color section */
+  .color-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .color-card { border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+  .swatch { height: 100px; }
+  .color-info { background: #fff; padding: 14px 16px; }
+  .color-info .name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .color-info .role { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 8px; }
+  .color-info .hex { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft); }
+
+  .status-callout {
+    background: var(--protect-bg); border: 1px solid #D3CBF0; border-radius: 8px;
+    padding: 24px 28px; margin-top: 32px; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .status-callout svg { width: 22px; height: 22px; flex-shrink: 0; margin-top: 2px; }
+  .status-callout .t { font-size: 14px; color: #4A3D96; }
+  .status-callout b { display: block; margin-bottom: 4px; font-size: 14.5px; }
+
+  .status-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 20px; }
+  .status-pill { font-size: 12.5px; font-weight: 600; padding: 7px 16px; border-radius: 100px; }
+  .status-pending { background: var(--warn-bg); color: var(--warn); }
+  .status-accepted { background: var(--ok-bg); color: var(--ok); }
+  .status-refused { background: var(--refuse-bg); color: var(--refuse); }
+  .status-protect { background: var(--protect-bg); color: var(--protect); }
+
+  /* Typography */
+  .type-row { display: flex; align-items: baseline; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .type-row:last-child { border-bottom: none; }
+  .type-sample { flex: 1; }
+  .type-meta { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft); width: 180px; flex-shrink: 0; }
+  .font-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+  .font-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 28px; }
+  .font-card .big { font-size: 34px; margin-bottom: 10px; }
+  .font-card .fname { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .font-card .use { font-size: 13px; color: var(--ink-soft); }
+
+  /* Iconography */
+  .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 24px; }
+  .icon-tile { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px 10px; text-align: center; }
+  .icon-tile svg { width: 26px; height: 26px; margin-bottom: 8px; }
+  .icon-tile .label { font-size: 11px; color: var(--ink-soft); }
+
+  /* Components */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .comp-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 28px; }
+  .comp-card h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); margin: 0 0 18px; font-family: 'Space Mono', monospace; }
+  .btn {
+    display: inline-block; padding: 12px 24px; border-radius: 3px; font-family: 'Anton', sans-serif;
+    font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-outline { border: 2px solid var(--ink); color: var(--ink); background: transparent; }
+  .btn-ghost { border: 1px solid var(--line); color: var(--ink); background: transparent; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+
+  .field-demo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field-demo label { font-size: 12.5px; font-weight: 600; }
+  .field-demo input {
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 5px; font-size: 14px; font-family: 'Inter'; background: #FCFBF8;
+  }
+
+  .card-demo {
+    border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .card-demo .meta h5 { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+  .card-demo .meta span { font-size: 12.5px; color: var(--ink-soft); }
+
+  .avatar-row { display: flex; gap: 12px; align-items: center; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+
+  /* Spacing/radius */
+  .scale-row { display: flex; align-items: center; gap: 20px; margin-bottom: 14px; }
+  .scale-row .box { background: var(--orange); flex-shrink: 0; }
+  .scale-row .l { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft); width: 140px; }
+
+  .radius-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-top: 20px; }
+  .radius-item { text-align: center; }
+  .radius-item .box { width: 64px; height: 64px; background: var(--panel); border: 1px solid var(--line); margin-bottom: 8px; }
+  .radius-item .l { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ink-soft); }
+
+  footer { padding: 48px 0; text-align: center; }
+  footer p { font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 860px) {
+    .cover h1 { font-size: 34px; }
+    .logo-grid, .color-grid, .comp-grid, .dont-grid, .font-cards { grid-template-columns: 1fr; }
+    .icon-grid { grid-template-columns: repeat(3, 1fr); }
+    .toc .wrap { overflow-x: auto; flex-wrap: nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">Charte graphique — v1.0</div>
+    <h1>HandMatch</h1>
+    <p>Plateforme de recrutement sportif amateur. Cette charte fixe les règles visuelles du produit : logo, couleurs, typographie, icônes et composants d'interface — pour garder une identité cohérente sur toutes les déclinaisons digitales (web et app).</p>
+    <div class="meta">
+      <div><b>Périmètre</b>Digital uniquement (web, app)</div>
+      <div><b>Statut du nom</b>Placeholder de travail</div>
+      <div><b>Date</b>Juillet 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="wrap">
+    <a href="#logo">Logo</a>
+    <a href="#couleurs">Couleurs</a>
+    <a href="#typo">Typographie</a>
+    <a href="#icones">Icônes</a>
+    <a href="#composants">Composants</a>
+    <a href="#grille">Grille & espacements</a>
+  </div>
+</div>
+
+<!-- LOGO -->
+<section class="block" id="logo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">01 — Identité</span>
+      <h2>Le logo</h2>
+      <p>Le symbole reprend un terrain de handball stylisé : un arc de cercle orange sur un cercle marine, avec un point central. Il fonctionne seul (icône d'app) ou associé au nom.</p>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-card">
+        <span class="label">Lockup horizontal — usage principal</span>
+        <div class="lockup">
+          <svg viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+          <span>HandMatch</span>
+        </div>
+      </div>
+
+      <div class="logo-card dark">
+        <span class="label">Lockup horizontal — fond sombre</span>
+        <div class="lockup" style="color:#fff">
+          <svg viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="14" stroke="#F2F4F7" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#F2F4F7"/>
+          </svg>
+          <span>HandMatch</span>
+        </div>
+      </div>
+
+      <div class="logo-card">
+        <span class="label">Version empilée</span>
+        <div class="lockup stacked">
+          <svg viewBox="0 0 30 30" fill="none" style="width:48px;height:48px">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+          <span>HandMatch</span>
+        </div>
+      </div>
+
+      <div class="logo-card">
+        <span class="label">Icône seule — favicon / app icon</span>
+        <svg viewBox="0 0 30 30" fill="none" style="width:56px;height:56px">
+          <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+          <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+          <circle cx="15" cy="15" r="4" fill="#10263F"/>
+        </svg>
+      </div>
+
+      <div class="logo-card dark">
+        <span class="label">Monochrome — un seul ton (tampon, filigrane)</span>
+        <svg viewBox="0 0 30 30" fill="none" style="width:56px;height:56px">
+          <circle cx="15" cy="15" r="14" stroke="#F2F4F7" stroke-width="2"/>
+          <path d="M15 1 A14 14 0 0 1 15 29" stroke="#F2F4F7" stroke-width="2" fill="none" opacity="0.6"/>
+          <circle cx="15" cy="15" r="4" fill="#F2F4F7"/>
+        </svg>
+      </div>
+
+      <div class="logo-card">
+        <span class="label">Icône simplifiée — très petites tailles (16–20px)</span>
+        <svg viewBox="0 0 30 30" fill="none" style="width:32px;height:32px">
+          <circle cx="15" cy="15" r="13" fill="#10263F"/>
+          <path d="M15 3 A12 12 0 0 1 15 27" stroke="#FF5A1F" stroke-width="3" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:56px;margin-bottom:20px">
+      <h3 style="font-size:20px">Zone de protection & taille minimale</h3>
+      <p style="font-size:14px">Un espace vide équivalent à la hauteur du symbole (x) doit toujours l'entourer. Aucun texte ni élément graphique ne doit entrer dans cette zone.</p>
+    </div>
+    <div class="clearspace-box">
+      <div class="clearspace-inner">
+        <span class="x-label">x</span>
+        <svg viewBox="0 0 30 30" fill="none">
+          <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+          <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+          <circle cx="15" cy="15" r="4" fill="#10263F"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="minsize-row">
+      <div class="minsize-item">
+        <svg viewBox="0 0 30 30" fill="none" style="width:16px;height:16px">
+          <circle cx="15" cy="15" r="13" fill="#10263F"/>
+          <path d="M15 3 A12 12 0 0 1 15 27" stroke="#FF5A1F" stroke-width="3" fill="none"/>
+        </svg>
+        <div class="label">16px — favicon</div>
+      </div>
+      <div class="minsize-item">
+        <svg viewBox="0 0 30 30" fill="none" style="width:24px;height:24px">
+          <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+          <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+          <circle cx="15" cy="15" r="4" fill="#10263F"/>
+        </svg>
+        <div class="label">24px — icône UI min.</div>
+      </div>
+      <div class="minsize-item">
+        <div class="lockup" style="gap:8px">
+          <svg viewBox="0 0 30 30" fill="none" style="width:28px;height:28px">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+          <span style="font-family:'Anton';font-size:18px">HandMatch</span>
+        </div>
+        <div class="label">120px — lockup min.</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:56px;margin-bottom:0">
+      <h3 style="font-size:20px">À ne pas faire</h3>
+    </div>
+    <div class="dont-grid">
+      <div class="dont-card">
+        <span class="icon-x">✕</span>
+        <div class="demo">
+          <svg viewBox="0 0 30 30" fill="none" style="transform:rotate(35deg)">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+        </div>
+        <p>Ne pas faire pivoter le symbole</p>
+      </div>
+      <div class="dont-card">
+        <span class="icon-x">✕</span>
+        <div class="demo">
+          <svg viewBox="0 0 30 30" fill="none" style="transform:scaleX(1.8)">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+        </div>
+        <p>Ne pas déformer les proportions</p>
+      </div>
+      <div class="dont-card">
+        <span class="icon-x">✕</span>
+        <div class="demo" style="background:var(--orange); border-radius:6px; height:60px;">
+          <svg viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#10263F" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#10263F"/>
+          </svg>
+        </div>
+        <p>Ne pas placer sur fond orange (contraste)</p>
+      </div>
+      <div class="dont-card">
+        <span class="icon-x">✕</span>
+        <div class="demo">
+          <svg viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="14" stroke="#7B4AB7" stroke-width="2"/>
+            <path d="M15 1 A14 14 0 0 1 15 29" stroke="#C6E21E" stroke-width="2" fill="none"/>
+            <circle cx="15" cy="15" r="4" fill="#7B4AB7"/>
+          </svg>
+        </div>
+        <p>Ne pas recolorer hors de la palette</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COULEURS -->
+<section class="block" id="couleurs">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">02 — Couleurs</span>
+      <h2>Palette</h2>
+      <p>Une base neutre chaude (papier, encre marine), un orange comme couleur d'action, et un vert lime en accent ponctuel. Les couleurs fonctionnelles (statuts) suivent des règles strictes détaillées ci-dessous.</p>
+    </div>
+
+    <h3 style="font-size:16px;margin-bottom:16px">Couleurs de marque</h3>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="swatch" style="background:#10263F"></div>
+        <div class="color-info"><div class="name">Encre / Marine</div><div class="role">Texte, headers, navigation, fonds sombres</div><div class="hex">#10263F</div></div>
+      </div>
+      <div class="color-card">
+        <div class="swatch" style="background:#FF5A1F"></div>
+        <div class="color-info"><div class="name">Orange</div><div class="role">Couleur d'action — CTA primaires, liens actifs</div><div class="hex">#FF5A1F</div></div>
+      </div>
+      <div class="color-card">
+        <div class="swatch" style="background:#B33D12"></div>
+        <div class="color-info"><div class="name">Orange foncé</div><div class="role">États hover / pressed de l'orange</div><div class="hex">#B33D12</div></div>
+      </div>
+      <div class="color-card">
+        <div class="swatch" style="background:#C6E21E"></div>
+        <div class="color-info"><div class="name">Lime</div><div class="role">Accent ponctuel — à doser, jamais en fond de texte</div><div class="hex">#C6E21E</div></div>
+      </div>
+      <div class="color-card">
+        <div class="swatch" style="background:#FBFAF7;border-bottom:1px solid var(--line)"></div>
+        <div class="color-info"><div class="name">Papier</div><div class="role">Fond principal des pages</div><div class="hex">#FBFAF7</div></div>
+      </div>
+      <div class="color-card">
+        <div class="swatch" style="background:#F0EEE7"></div>
+        <div class="color-info"><div class="name">Panel</div><div class="role">Fonds de cartes, zones secondaires</div><div class="hex">#F0EEE7</div></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;margin:44px 0 16px">Couleurs fonctionnelles (statuts)</h3>
+    <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-bottom:8px">Chaque couleur fonctionnelle a un seul rôle. On ne les mélange jamais avec les couleurs de marque ci-dessus.</p>
+    <div class="status-row">
+      <span class="status-pill status-pending">En attente</span>
+      <span class="status-pill status-accepted">Acceptée</span>
+      <span class="status-pill status-refused">Refusée</span>
+      <span class="status-pill status-protect">Profil protégé</span>
+    </div>
+
+    <div class="status-callout">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+      <div class="t">
+        <b>Le violet « protect » est réservé exclusivement aux mineurs</b>
+        Cette couleur (#5C4AB7) ne doit jamais être réutilisée pour autre chose — pas pour un statut, pas pour un accent décoratif. La règle est simple et volontairement rigide : dès que du violet apparaît quelque part dans l'interface, ça signifie « ce contenu concerne un profil mineur et sa protection ». C'est ce qui rend le repère fiable pour l'utilisateur, y compris un club qui doit adapter son comportement instantanément.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TYPOGRAPHIE -->
+<section class="block" id="typo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">03 — Typographie</span>
+      <h2>Trois polices, trois rôles</h2>
+      <p>Chaque police a un usage précis et ne doit pas se substituer aux deux autres.</p>
+    </div>
+
+    <div class="font-cards">
+      <div class="font-card">
+        <div class="fname">Anton</div>
+        <div class="big" style="font-family:'Anton'">TITRES</div>
+        <div class="use">Titres, boutons, chiffres clés. Toujours en majuscules. Ne jamais l'utiliser pour du texte courant — illisible en paragraphe.</div>
+      </div>
+      <div class="font-card">
+        <div class="fname">Inter</div>
+        <div class="big" style="font-family:'Inter';font-weight:700;text-transform:none">Corps de texte</div>
+        <div class="use">Paragraphes, formulaires, navigation, contenu des cartes. Poids 400 (texte), 500/600 (labels), 700 (emphase).</div>
+      </div>
+      <div class="font-card">
+        <div class="fname">Space Mono</div>
+        <div class="big mono" style="font-size:26px">DATA / TAGS</div>
+        <div class="use">Kickers, badges, URLs, dates, données chiffrées. Donne une touche "outil de terrain" plutôt que décorative.</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:16px;margin-bottom:16px">Échelle</h3>
+    <div class="type-row">
+      <div class="type-meta">H1 — 56 / 40 mobile</div>
+      <div class="type-sample" style="font-size:44px">Le terrain où on se rencontre</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">H2 — 34px</div>
+      <div class="type-sample" style="font-size:34px">Trois étapes, pas plus</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">H3 — 20–22px</div>
+      <div class="type-sample" style="font-size:21px;font-family:'Inter';font-weight:700;text-transform:none">Pour les clubs</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Corps — 15–16px</div>
+      <div class="type-sample" style="font-size:15.5px">HandMatch centralise les profils et les offres de recrutement du handball amateur.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Mono / kicker — 12–13px</div>
+      <div class="type-sample mono" style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--orange-dark)">Beta ouverte · Rouen & environs</div>
+    </div>
+  </div>
+</section>
+
+<!-- ICONES -->
+<section class="block" id="icones">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">04 — Iconographie</span>
+      <h2>Style d'icônes</h2>
+      <p>Icônes au trait, épaisseur 1.5–2px, angles arrondis, grille 20×20. Toujours en ink ou en couleur fonctionnelle — jamais en orange plein (réservé aux actions).</p>
+    </div>
+    <div class="icon-grid">
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#2F7D4F" stroke-width="1.5"/><path d="M6 10l3 3 5-6" stroke="#2F7D4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="label">Validé</div>
+      </div>
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"/></svg>
+        <div class="label">Refuser</div>
+      </div>
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4A3D96" stroke-width="1.5"/><path d="M10 6v5" stroke="#4A3D96" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#4A3D96"/></svg>
+        <div class="label">Alerte info</div>
+      </div>
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+        <div class="label">Protection</div>
+      </div>
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M4 2v16M4 3h11l-2 3 2 3H4" stroke="#3A5470" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <div class="label">Signaler</div>
+      </div>
+      <div class="icon-tile">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="label">Ajouter / info</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPOSANTS -->
+<section class="block" id="composants">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">05 — Composants UI</span>
+      <h2>Briques d'interface</h2>
+      <p>Les composants déjà utilisés dans les maquettes, formalisés ici comme référence réutilisable.</p>
+    </div>
+
+    <div class="comp-grid">
+      <div class="comp-card">
+        <h4>Boutons</h4>
+        <div class="btn-row">
+          <button class="btn btn-primary">Primaire</button>
+          <button class="btn btn-outline">Secondaire</button>
+          <button class="btn btn-ghost">Tertiaire</button>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0">Primaire = une seule action par écran (orange). Secondaire = action alternative. Tertiaire = action discrète (annuler, voir plus).</p>
+      </div>
+
+      <div class="comp-card">
+        <h4>Champs de formulaire</h4>
+        <div class="field-demo">
+          <label>Nom du club</label>
+          <input type="text" placeholder="Ex. AS Handball Rouen">
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0">Bordure fine var(--line), fond légèrement crème, coins à 5px.</p>
+      </div>
+
+      <div class="comp-card">
+        <h4>Badges de statut</h4>
+        <div class="status-row" style="margin-top:0;margin-bottom:16px">
+          <span class="status-pill status-pending">En attente</span>
+          <span class="status-pill status-accepted">Acceptée</span>
+          <span class="status-pill status-refused">Refusée</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0">Pilule 100px de rayon, fond pastel + texte plein de la même teinte.</p>
+      </div>
+
+      <div class="comp-card">
+        <h4>Cartes (offre / résultat)</h4>
+        <div class="card-demo" style="margin-bottom:16px">
+          <div class="meta">
+            <h5>Ailier gauche — Séniors R1</h5>
+            <span>Publiée le 3 juillet · 5 candidatures</span>
+          </div>
+          <span class="status-pill status-accepted">Active</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0">Bordure fine, coins 8px, contenu à gauche / statut à droite.</p>
+      </div>
+
+      <div class="comp-card">
+        <h4>Avatars</h4>
+        <div class="avatar-row" style="margin-bottom:16px">
+          <div class="avatar">AR</div>
+          <div class="avatar" style="background:var(--protect)">SB</div>
+          <div class="avatar" style="background:var(--orange)">KM</div>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin:0">Initiales sur fond plein. Le violet peut identifier un profil mineur dans une liste d'un coup d'œil.</p>
+      </div>
+
+      <div class="comp-card">
+        <h4>Bandeau de confiance</h4>
+        <div style="background:var(--navy);color:#E8ECF1;padding:14px 18px;border-radius:6px;font-size:13px;display:flex;gap:16px;flex-wrap:wrap">
+          <span><b style="color:#F2F4F7">Clubs vérifiés</b> via FFHB</span>
+          <span><b style="color:#F2F4F7">Modération active</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRILLE -->
+<section class="block" style="border-bottom:none" id="grille">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">06 — Grille & espacements</span>
+      <h2>Rythme visuel</h2>
+      <p>Base 4px pour tous les espacements, coins arrondis selon la taille de l'élément.</p>
+    </div>
+
+    <div class="scale-row"><div class="box" style="width:4px;height:16px"></div><div class="l">4px — micro-espace</div></div>
+    <div class="scale-row"><div class="box" style="width:8px;height:16px"></div><div class="l">8px — espace interne</div></div>
+    <div class="scale-row"><div class="box" style="width:16px;height:16px"></div><div class="l">16px — entre éléments liés</div></div>
+    <div class="scale-row"><div class="box" style="width:24px;height:16px"></div><div class="l">24px — entre blocs</div></div>
+    <div class="scale-row"><div class="box" style="width:48px;height:16px"></div><div class="l">48px+ — entre sections</div></div>
+
+    <div class="radius-row">
+      <div class="radius-item"><div class="box" style="border-radius:3px"></div><div class="l">3px — boutons</div></div>
+      <div class="radius-item"><div class="box" style="border-radius:6px"></div><div class="l">6–8px — cartes</div></div>
+      <div class="radius-item"><div class="box" style="border-radius:32px"></div><div class="l">100px — pilules, avatars</div></div>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);max-width:640px;margin-top:32px">Point de rupture responsive unique à 860px, cohérent avec les maquettes déjà produites (passage en colonne unique, navigation simplifiée sur mobile).</p>
+  </div>
+</section>
+
+<footer>
+  <p>HandMatch — Charte graphique v1.0 · Document de travail, à faire évoluer avec les retours de la phase beta</p>
+</footer>
+
+</body>
+</html>

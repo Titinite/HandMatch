@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — États vides & erreurs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --lime-dark: #5C6B0A; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --refuse: #A32D2D; --refuse-bg: #FAEAEA; --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-sub { text-align: center; margin-bottom: 56px; font-size: 14px; color: var(--ink-soft); }
+
+  .screen-block { margin-bottom: 64px; }
+  .screen-label { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .screen-label .n { font-family: 'Anton', sans-serif; font-size: 20px; color: var(--orange); width: 32px; flex-shrink: 0; }
+  .screen-label h2 { font-size: 19px; margin: 0; }
+  .screen-label p { margin: 4px 0 0; font-size: 13.5px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 320px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+  .app-body { padding: 64px 40px; }
+
+  .empty-state { max-width: 420px; margin: 0 auto; text-align: center; }
+  .empty-icon {
+    width: 72px; height: 72px; border-radius: 50%; background: var(--panel); display: flex;
+    align-items: center; justify-content: center; margin: 0 auto 24px;
+  }
+  .empty-icon.warn { background: var(--warn-bg); }
+  .empty-icon.refuse { background: var(--refuse-bg); }
+  .empty-icon.protect { background: var(--protect-bg); }
+  .empty-icon svg { width: 32px; height: 32px; }
+  .empty-state h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 18px; margin: 0 0 10px; }
+  .empty-state p { font-size: 14px; color: var(--ink-soft); margin: 0 0 26px; }
+  .btn { display: inline-block; padding: 12px 24px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 12.5px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-outline { border: 1px solid var(--line); color: var(--ink); background: transparent; }
+  .btn-protect { background: var(--protect); color: #fff; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .error-code {
+    font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ink-soft);
+    background: var(--panel); display: inline-block; padding: 4px 10px; border-radius: 4px; margin-top: 18px;
+  }
+
+  .status-progress { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 0 24px; }
+  .status-progress .step { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; background: var(--protect); color: #fff; }
+  .status-progress .step.pending { background: var(--panel); color: var(--ink-soft); }
+  .status-progress .bar { width: 32px; height: 2px; background: var(--line); }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">États vides & erreurs</div>
+  <div class="flow-sub">Cas fréquents à couvrir, au-delà des écrans "cas nominal" déjà maquettés</div>
+
+  <!-- 1: Aucune offre publiée (club) -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">01</div>
+      <div>
+        <h2>Aucune offre publiée — vue club</h2>
+        <p>Premier accès au tableau de bord, avant toute publication.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/club/tableau-de-bord</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>AS Handball Rouen</span><div class="avatar">AR</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="14" rx="2" stroke="#3A5470" stroke-width="1.5"/><path d="M4 10h16" stroke="#3A5470" stroke-width="1.5"/><path d="M9 3v4M15 3v4" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Aucune offre publiée pour l'instant</h3>
+          <p>Publiez votre premier besoin de recrutement pour commencer à recevoir des candidatures de joueurs et entraîneurs.</p>
+          <button class="btn btn-primary">Publier une offre</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2: Aucune candidature reçue -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">02</div>
+      <div>
+        <h2>Aucune candidature reçue</h2>
+        <p>L'offre est active mais n'a encore reçu aucune réponse.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/club/offres/gardien-u15/candidatures</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>AS Handball Rouen</span><div class="avatar">AR</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="#3A5470" stroke-width="1.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Pas encore de candidature</h3>
+          <p>Votre offre "Gardien de but — U15" est visible depuis 2 jours. Les candidatures apparaîtront ici dès qu'un joueur postule.</p>
+          <button class="btn btn-outline">Élargir la recherche à d'autres profils</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3: Recherche sans résultat -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">03</div>
+      <div>
+        <h2>Recherche sans résultat</h2>
+        <p>Filtres trop restrictifs côté joueur ou club — proposer un ajustement plutôt qu'une impasse.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/recherche/offres</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>Karim M.</span><div class="avatar">KM</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="10" cy="10" r="6.5" stroke="#3A5470" stroke-width="1.5"/><path d="M15 15l5 5" stroke="#3A5470" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Aucune offre ne correspond à ces critères</h3>
+          <p>Aucun résultat pour "Gardien de but" dans un rayon de 10 km autour de Rouen. Essayez d'élargir le rayon ou de retirer un filtre.</p>
+          <div class="btn-row">
+            <button class="btn btn-primary">Élargir à 30 km</button>
+            <button class="btn btn-outline">Réinitialiser les filtres</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4: Club introuvable -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">04</div>
+      <div>
+        <h2>Club introuvable</h2>
+        <p>Lien expiré, club supprimé, ou faute de frappe dans l'URL.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/club/club-inexistant</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>Karim M.</span><div class="avatar">KM</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="empty-icon warn">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#B37B12" stroke-width="1.5"/><path d="M12 8v5" stroke="#B37B12" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#B37B12"/></svg>
+          </div>
+          <h3>Ce club n'existe pas ou plus</h3>
+          <p>Le lien que vous avez suivi ne correspond à aucun club actif sur HandMatch. Il a peut-être été supprimé ou l'adresse est incorrecte.</p>
+          <button class="btn btn-primary">Retour à la recherche</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5: Erreur générique serveur -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">05</div>
+      <div>
+        <h2>Erreur générique</h2>
+        <p>Panne serveur, timeout, ou tout cas non anticipé — message rassurant, sans jargon technique.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/club/tableau-de-bord</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>AS Handball Rouen</span><div class="avatar">AR</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="empty-icon refuse">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3l9-16z" stroke="#A32D2D" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 10v4" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#A32D2D"/></svg>
+          </div>
+          <h3>Un problème est survenu</h3>
+          <p>Quelque chose ne s'est pas passé comme prévu de notre côté. Rechargez la page, ou réessayez dans quelques instants.</p>
+          <div class="btn-row">
+            <button class="btn btn-primary">Recharger la page</button>
+            <button class="btn btn-outline">Contacter le support</button>
+          </div>
+          <div class="error-code">Code erreur : HM-500-2291</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6: En attente de validation parentale -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">06</div>
+      <div>
+        <h2>Profil en attente de validation parentale</h2>
+        <p>État intermédiaire propre au parcours mineur — le jeune a fait sa demande, le parent n'a pas encore répondu.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">handmatch.fr/profil/en-attente</div></div>
+      <div class="app-nav">
+        <div class="logo"><svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>HandMatch</div>
+        <div class="right"><span>Sophie B.</span><div class="avatar" style="background:#5C4AB7">SB</div></div>
+      </div>
+      <div class="app-body">
+        <div class="empty-state">
+          <div class="status-progress">
+            <div class="step">✓</div>
+            <div class="bar"></div>
+            <div class="step pending">2</div>
+            <div class="bar"></div>
+            <div class="step pending">3</div>
+          </div>
+          <div class="empty-icon protect">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3.5v6c0 5-3.5 8.5-8 9-4.5-0.5-8-4-8-9v-6L12 2z" stroke="#4A3D96" stroke-width="1.5" fill="none"/><path d="M9 12l2 2 4-4.5" stroke="#4A3D96" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Ton profil est presque prêt !</h3>
+          <p>On a envoyé une demande à ton parent ou tuteur (marie.b@exemple.fr). Dès qu'il ou elle donne son accord, ton profil sera actif et visible par les clubs.</p>
+          <button class="btn btn-protect">Renvoyer la demande</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

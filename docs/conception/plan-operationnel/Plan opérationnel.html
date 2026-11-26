@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Plan opérationnel beta & KPIs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --lime-dark: #5C6B0A; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --refuse: #A32D2D; --refuse-bg: #FAEAEA; --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .display { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.05; }
+  h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 16px; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 32px; }
+
+  .cover { background: var(--navy); color: #F2F4F7; padding: 84px 0 60px; }
+  .cover .kicker { font-family: 'Space Mono'; font-size: 12.5px; color: #9FB6CE; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .cover h1 { font-size: 38px; margin: 0 0 14px; color: #fff; }
+  .cover p { font-size: 15.5px; color: #B9C4D2; max-width: 620px; margin: 0; }
+  .cover .meta { margin-top: 30px; display: flex; gap: 28px; flex-wrap: wrap; }
+  .cover .meta div { font-size: 12.5px; color: #8FA5BC; }
+  .cover .meta b { display: block; color: #F2F4F7; font-family: 'Space Mono'; font-size: 13.5px; margin-bottom: 2px; }
+
+  .toc { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); padding: 14px 0; overflow-x: auto; white-space: nowrap; }
+  .toc a { font-size: 12.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; font-family: 'Space Mono'; text-transform: uppercase; letter-spacing: 0.3px; margin-right: 20px; }
+  .toc a:hover { color: var(--orange); }
+
+  section.block { padding: 60px 0; border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 680px; margin-bottom: 32px; }
+  .section-head .kicker { font-family: 'Space Mono'; font-size: 12.5px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 10px; }
+  .section-head h2 { font-size: 27px; margin: 0 0 12px; }
+  .section-head p { color: var(--ink-soft); font-size: 14.5px; margin: 0; }
+
+  .callout { display: flex; gap: 14px; align-items: flex-start; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 13.5px; }
+  .callout svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+  .callout-warn { background: var(--warn-bg); border: 1px solid #E8D4A8; color: var(--warn); }
+  .callout-ok { background: var(--ok-bg); border: 1px solid #BFE0C9; color: var(--ok); }
+  .callout b { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* Target cards */
+  .target-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .target-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .target-card .v { font-family: 'Anton'; font-size: 30px; color: var(--orange); }
+  .target-card .l { font-size: 12.5px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  /* Channel list */
+  .channel-card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; margin-bottom: 12px; display: flex; gap: 16px; align-items: flex-start; }
+  .channel-card .n { font-family: 'Anton'; font-size: 18px; color: var(--orange); width: 28px; flex-shrink: 0; }
+  .channel-card h4 { margin: 0 0 5px; font-size: 14.5px; font-family: 'Inter'; font-weight: 700; }
+  .channel-card p { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+  /* Timeline */
+  .timeline-h { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .tstep { display: grid; grid-template-columns: 100px 1fr; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .tstep:last-child { border-bottom: none; }
+  .tstep .week { font-family: 'Space Mono'; font-size: 12.5px; color: var(--orange-dark); font-weight: 700; padding-top: 2px; }
+  .tstep h4 { margin: 0 0 6px; font-size: 15px; font-family: 'Inter'; font-weight: 700; }
+  .tstep p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  /* KPI table */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th { text-align: left; font-family: 'Space Mono'; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); padding: 10px 12px; border-bottom: 2px solid var(--ink); }
+  td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .kpi-target { font-family: 'Space Mono'; font-size: 12px; font-weight: 700; color: var(--ok); }
+
+  .decision-box { background: #fff; border: 1px dashed var(--line); border-radius: 8px; padding: 20px 22px; margin-bottom: 14px; }
+  .decision-box .tag { font-family: 'Space Mono'; font-size: 11px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 8px; }
+  .decision-box h4 { margin: 0 0 6px; font-size: 14.5px; }
+  .decision-box p { font-size: 13.5px; color: var(--ink-soft); margin: 0 0 10px; }
+  .decision-box .rec { font-size: 13px; background: var(--panel); border-radius: 6px; padding: 10px 14px; }
+  .decision-box .rec b { font-family: 'Space Mono'; font-size: 10.5px; text-transform: uppercase; color: var(--ink-soft); display: block; margin-bottom: 3px; }
+
+  footer { padding: 44px 0; text-align: center; }
+  footer p { font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 720px) {
+    .target-row { grid-template-columns: 1fr; }
+    .tstep { grid-template-columns: 1fr; gap: 6px; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    td { border-bottom: none; padding: 3px 12px; }
+    tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
+    td::before { content: attr(data-label); display: block; font-family: 'Space Mono'; font-size: 10px; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">Document interne — v1.0</div>
+    <h1>Plan opérationnel — Beta & KPIs</h1>
+    <p>Comment recruter les premiers utilisateurs de HandMatch, les accompagner, et mesurer concrètement si la plateforme répond au besoin — au-delà du simple fait qu'elle fonctionne techniquement.</p>
+    <div class="meta">
+      <div><b>Zone de lancement</b>Rouen & environs</div>
+      <div><b>Mode d'accès</b>Invitation, premium offert</div>
+      <div><b>Statut</b>Document de travail, chiffres à ajuster</div>
+    </div>
+  </div>
+</div>
+
+<div class="toc">
+  <div class="wrap">
+    <a href="#recrutement">Recrutement</a>
+    <a href="#onboarding">Onboarding</a>
+    <a href="#calendrier">Calendrier</a>
+    <a href="#retours">Collecte des retours</a>
+    <a href="#kpis">KPIs & instrumentation</a>
+    <a href="#arbitrages">Arbitrages restants</a>
+  </div>
+</div>
+
+<!-- RECRUTEMENT -->
+<section class="block" id="recrutement">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">01 — Qui recruter</span>
+      <h2>Objectifs de la cohorte beta</h2>
+      <p>L'objectif n'est pas le volume mais la représentativité : assez de clubs et de profils pour que les mises en relation soient réelles, assez peu pour que tu puisses suivre chaque cas individuellement.</p>
+    </div>
+
+    <div class="target-row">
+      <div class="target-card"><div class="v mono">8–12</div><div class="l">Clubs invités</div></div>
+      <div class="target-card"><div class="v mono">40–60</div><div class="l">Joueurs / entraîneurs invités</div></div>
+      <div class="target-card"><div class="v mono">100%</div><div class="l">Basés à Rouen & environs</div></div>
+    </div>
+
+    <div class="callout callout-warn">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#B37B12" stroke-width="1.5"/><path d="M10 6.5v4" stroke="#B37B12" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#B37B12"/></svg>
+      <div><b>Pourquoi ce ratio clubs / joueurs</b>Avec 8–12 clubs et 40–60 profils, chaque club dispose d'un vivier suffisant pour publier une offre et recevoir plusieurs candidatures réalistes — l'objectif est d'éviter des offres qui restent sans réponse, ce qui découragerait les premiers clubs testeurs.</div>
+    </div>
+
+    <div class="section-head" style="margin-bottom:20px; margin-top:8px">
+      <h3 style="font-size:16px">Canaux de recrutement</h3>
+    </div>
+
+    <div class="channel-card">
+      <div class="n">01</div>
+      <div><h4>Ton réseau direct</h4><p>Clubs et joueurs que tu connais déjà ou peux approcher facilement (Rouen et clubs environnants) — les premiers retours les plus francs viendront probablement de là.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">02</div>
+      <div><h4>Contact direct des clubs via leur dirigeant</h4><p>Un message ciblé aux présidents ou secrétaires de clubs (souvent trouvables via l'annuaire FFHB ou les pages Facebook de club), en insistant sur le gain de temps pour trier les candidatures — le point de douleur le plus concret pour un bénévole.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">03</div>
+      <div><h4>Joueurs en recherche active</h4><p>Groupes Facebook ou forums locaux où des joueurs cherchent déjà un club (souvent en période de mutation, entre juin et août) — moment où le besoin est le plus fort.</p></div>
+    </div>
+
+    <div class="decision-box">
+      <span class="tag">Point à trancher</span>
+      <h4>Ordre de recrutement : clubs d'abord, ou en parallèle ?</h4>
+      <p>Un club sans joueurs pour candidater, ou des joueurs sans offre à voir, produisent tous les deux une impression de plateforme vide.</p>
+      <div class="rec"><b>Proposition</b>Recruter 3-4 clubs en premier, attendre qu'ils publient au moins une offre chacun, puis ouvrir l'accès aux joueurs — pour qu'ils voient du contenu réel dès leur première visite.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ONBOARDING -->
+<section class="block" id="onboarding">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">02 — Accompagnement</span>
+      <h2>Onboarding des premiers utilisateurs</h2>
+      <p>Vu le volume (une cinquantaine de comptes), un accompagnement semi-personnalisé reste possible sans outillage lourd.</p>
+    </div>
+
+    <div class="channel-card">
+      <div class="n">01</div>
+      <div><h4>Invitation individuelle</h4><p>Email ou message direct, pas de formulaire d'inscription publique — cohérent avec le principe d'accès sur invitation du CDC. Chaque invitation inclut un lien direct vers l'inscription.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">02</div>
+      <div><h4>Premier contact accompagné pour les clubs</h4><p>Un appel ou échange rapide avec chaque club à son inscription (10-15 min) pour vérifier que le profil est bien complété et que la première offre est publiée avant qu'il ne quitte la plateforme. Les clubs sont peu nombreux (8-12), donc cet accompagnement individuel reste réaliste.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">03</div>
+      <div><h4>Onboarding auto-guidé pour les joueurs</h4><p>Les écrans d'onboarding déjà maquettés (splash, 3 étapes) suffisent pour ce volume plus important — pas d'accompagnement individuel nécessaire, sauf demande explicite.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">04</div>
+      <div><h4>Canal de contact direct pendant toute la beta</h4><p>Une adresse email ou un numéro unique communiqué à chaque testeur pour remonter un bug ou une question — à ne pas confondre avec le circuit de signalement de modération, qui reste réservé aux comportements abusifs.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDRIER -->
+<section class="block" id="calendrier">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">03 — Calendrier</span>
+      <h2>Séquencement sur 8 semaines</h2>
+      <p>Un calendrier resserré pour garder la pression nécessaire à des retours rapides, sans se précipiter sur les arbitrages encore ouverts (durée du premium, fonctionnalités payantes).</p>
+    </div>
+
+    <div class="timeline-h">
+      <div class="tstep">
+        <div class="week">Semaine 1</div>
+        <div><h4>Recrutement des premiers clubs</h4><p>Contact direct de 8-12 clubs, onboarding accompagné, première offre publiée par chacun.</p></div>
+      </div>
+      <div class="tstep">
+        <div class="week">Semaine 2</div>
+        <div><h4>Ouverture aux joueurs / entraîneurs</h4><p>Invitations envoyées, onboarding auto-guidé, premières candidatures attendues.</p></div>
+      </div>
+      <div class="tstep">
+        <div class="week">Semaines 3–6</div>
+        <div><h4>Usage réel, observation active</h4><p>Suivi rapproché des KPIs (section 5), remontée de bugs, ajustements mineurs sans changement de fonctionnalité majeure pour ne pas perturber les testeurs.</p></div>
+      </div>
+      <div class="tstep">
+        <div class="week">Semaine 7</div>
+        <div><h4>Collecte de retours structurée</h4><p>Questionnaire + entretiens courts avec les clubs (voir section 4), pour arbitrer les fonctionnalités premium encore ouvertes.</p></div>
+      </div>
+      <div class="tstep">
+        <div class="week">Semaine 8</div>
+        <div><h4>Bilan et décisions</h4><p>Synthèse des retours, décision sur la durée du premium offert, priorisation des évolutions avant une éventuelle ouverture plus large.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RETOURS -->
+<section class="block" id="retours">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">04 — Collecte des retours</span>
+      <h2>Écouter sans sur-solliciter</h2>
+      <p>Les testeurs beta sont peu nombreux et précieux — mieux vaut peu de sollicitations bien choisies qu'un flux continu de questionnaires.</p>
+    </div>
+
+    <div class="channel-card">
+      <div class="n">01</div>
+      <div><h4>Questionnaire court à mi-parcours (semaine 4)</h4><p>5 à 7 questions maximum, envoyé individuellement, pour capter les premières frictions avant qu'elles ne deviennent une raison de décrocher.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">02</div>
+      <div><h4>Entretiens courts avec les clubs (semaine 7)</h4><p>15-20 minutes par club, en priorité — ce sont eux qui portent le plus l'usage récurrent (publication d'offres, tri de candidatures) et leurs retours orienteront directement les fonctionnalités premium.</p></div>
+    </div>
+    <div class="channel-card">
+      <div class="n">03</div>
+      <div><h4>Canal de contact ouvert en continu</h4><p>Le canal mis en place à l'onboarding (section 2) sert aussi de collecte passive tout au long de la beta.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- KPIS -->
+<section class="block" id="kpis">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">05 — KPIs & instrumentation</span>
+      <h2>Mesurer dès le premier jour</h2>
+      <p>Reprise des indicateurs déjà identifiés dans le CDC (section 7), avec une méthode concrète de mesure pour chacun — pour ne pas se retrouver à vouloir analyser après coup des données non captées.</p>
+    </div>
+
+    <table>
+      <thead><tr><th>Indicateur</th><th>Comment le mesurer</th><th>Cible beta</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-label="Indicateur">Clubs actifs inscrits et vérifiés</td>
+          <td data-label="Mesure">Compte manuel — nombre de clubs avec statut "vérifié" dans le back-office</td>
+          <td data-label="Cible"><span class="kpi-target">8–12</span></td>
+        </tr>
+        <tr>
+          <td data-label="Indicateur">Mises en relation abouties</td>
+          <td data-label="Mesure">Suivi manuel déclaratif — un club confirme un recrutement effectif via le canal de contact (section 4), pas seulement une candidature acceptée sur la plateforme</td>
+          <td data-label="Cible"><span class="kpi-target">≥ 5 sur 8 semaines</span></td>
+        </tr>
+        <tr>
+          <td data-label="Indicateur">Taux de conversion candidature → recrutement</td>
+          <td data-label="Mesure">Nombre de recrutements confirmés ÷ nombre total de candidatures envoyées sur la période</td>
+          <td data-label="Cible"><span class="kpi-target">Indicatif — pas de cible fixe en beta</span></td>
+        </tr>
+        <tr>
+          <td data-label="Indicateur">Taux de rétention post-premium</td>
+          <td data-label="Mesure">Ne peut être mesuré qu'après la fin de la beta et l'expiration du premium offert — à ré-évaluer une fois ce point tranché (section 6)</td>
+          <td data-label="Cible"><span class="kpi-target">À définir post-beta</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-ok">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M6 10l3 3 5-6" stroke="#2F7D4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>Pas besoin d'outil d'analytics sophistiqué pour démarrer</b>Vu le volume (50-70 comptes), un tableur partagé (Google Sheets) mis à jour manuellement chaque semaine suffit largement pour ces 4 indicateurs. L'instrumentation automatisée (événements trackés en base) devient utile seulement à partir du freemium, quand le volume dépassera ce qu'un suivi manuel permet.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ARBITRAGES -->
+<section class="block" style="border-bottom:none" id="arbitrages">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">06 — Arbitrages restants</span>
+      <h2>Décisions à prendre pendant ou après la beta</h2>
+      <p>Volontairement laissées ouvertes dans le CDC — la beta doit justement aider à les trancher avec des données réelles plutôt qu'en amont dans le vide.</p>
+    </div>
+
+    <div class="decision-box">
+      <span class="tag">CDC — section 2.1</span>
+      <h4>Durée de l'accès premium offert</h4>
+      <p>Limitée dans le temps après le lancement officiel, ou acquise à vie pour les tout premiers inscrits ?</p>
+      <div class="rec"><b>Proposition pour trancher</b>Attendre les entretiens de la semaine 7 — si les clubs expriment une forte sensibilité au prix, un premium à vie pour les tout premiers inscrits devient un argument de fidélisation fort à moindre coût vu le faible volume concerné.</div>
+    </div>
+
+    <div class="decision-box">
+      <span class="tag">CDC — section 2.2</span>
+      <h4>Paliers exacts du compte premium</h4>
+      <p>Mise en avant des offres, recherche avancée illimitée, statistiques, candidatures illimitées — quelle combinaison, à quel prix ?</p>
+      <div class="rec"><b>Proposition pour trancher</b>Ne pas arbitrer avant la semaine 7 — poser explicitement la question aux clubs en entretien ("qu'est-ce qui vous ferait payer") plutôt que de deviner en amont.</div>
+    </div>
+
+    <div class="decision-box">
+      <span class="tag">Nouveau — issu de ce document</span>
+      <h4>Ordre de recrutement clubs / joueurs</h4>
+      <p>Voir section 1 — proposition de démarrer par les clubs, à valider avant la semaine 1.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>HandMatch — Plan opérationnel beta & KPIs v1.0 · Document de travail, chiffres et délais à ajuster selon ta disponibilité réelle</p>
+</footer>
+
+</body>
+</html>

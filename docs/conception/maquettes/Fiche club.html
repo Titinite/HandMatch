@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Fiche détaillée club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --lime: #C6E21E; --lime-dark: #5C6B0A; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-sub { text-align: center; margin-bottom: 40px; font-size: 14px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 320px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+
+  .app-body { padding: 0 0 40px; }
+
+  /* Cover / identity band */
+  .club-cover { background: var(--navy); padding: 40px 40px 28px; color: #fff; position: relative; }
+  .club-id { display: flex; gap: 20px; align-items: center; }
+  .club-logo { width: 76px; height: 76px; border-radius: 10px; background: var(--panel); color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .club-id h2 { color: #fff; font-size: 24px; margin: 0 0 8px; }
+  .club-id .loc { font-size: 13px; color: #B9C4D2; margin-bottom: 10px; }
+  .verify-chip {
+    display: inline-flex; align-items: center; gap: 6px; background: rgba(198,226,30,0.15);
+    border: 1px solid rgba(198,226,30,0.4); color: var(--lime); font-size: 12px; font-weight: 600;
+    padding: 5px 12px; border-radius: 100px;
+  }
+  .verify-chip svg { width: 13px; height: 13px; }
+
+  .content { padding: 32px 40px 0; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat { background: var(--panel); border-radius: 8px; padding: 16px 18px; }
+  .stat .v { font-family: 'Anton', sans-serif; font-size: 24px; color: var(--navy); }
+  .stat .l { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }
+
+  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; margin: 0 0 16px; }
+
+  .teams-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .teams-row span { font-size: 12.5px; background: var(--panel); padding: 6px 14px; border-radius: 100px; color: var(--ink); font-weight: 500; }
+
+  .offer-card {
+    border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .offer-card .meta h4 { margin: 0 0 4px; font-size: 14.5px; font-weight: 600; }
+  .offer-card .meta span { font-size: 12.5px; color: var(--ink-soft); }
+  .badge { font-size: 11px; padding: 4px 10px; border-radius: 100px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .badge-active { background: var(--ok-bg); color: var(--ok); }
+  .btn { display: inline-block; padding: 9px 18px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-outline { border: 1px solid var(--line); color: var(--ink); background: transparent; }
+
+  .reviews-block {
+    border: 1px dashed var(--line); border-radius: 8px; padding: 28px; text-align: center;
+    color: var(--ink-soft); font-size: 13.5px; margin-bottom: 36px; background: #FCFBF8;
+  }
+  .reviews-block .tag { font-family: 'Space Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.4px; color: var(--orange-dark); display: block; margin-bottom: 8px; }
+
+  .report-link { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft);
+    justify-content: center; padding: 24px 0 0; border-top: 1px solid var(--line); margin-top: 8px; }
+
+  @media (max-width: 700px) {
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Fiche détaillée — club</div>
+  <div class="flow-sub">Vue publique consultée par un joueur ou un entraîneur avant de candidater</div>
+
+  <div class="browser">
+    <div class="browser-bar">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      <div class="url">handmatch.fr/club/as-handball-rouen</div>
+    </div>
+    <div class="app-nav">
+      <div class="logo">
+        <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+        HandMatch
+      </div>
+      <div class="right">
+        <span>Karim M.</span>
+        <div class="avatar">KM</div>
+      </div>
+    </div>
+
+    <div class="app-body">
+      <div class="club-cover">
+        <div class="club-id">
+          <div class="club-logo">Logo</div>
+          <div>
+            <h2>AS Handball Rouen</h2>
+            <div class="loc">Rouen, Normandie · Fondé en 1987</div>
+            <div class="verify-chip">
+              <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#C6E21E" stroke-width="1.5"/><path d="M6 10l3 3 5-6" stroke="#C6E21E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Club vérifié FFHB — n° 7601234
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="stat-row">
+          <div class="stat"><div class="v mono">3</div><div class="l">Offres actives</div></div>
+          <div class="stat"><div class="v mono">42</div><div class="l">Membres inscrits</div></div>
+          <div class="stat"><div class="v mono">4</div><div class="l">Équipes / niveaux</div></div>
+          <div class="stat"><div class="v mono">39</div><div class="l">Années d'existence</div></div>
+        </div>
+
+        <div class="section-title">Équipes / niveaux</div>
+        <div class="teams-row">
+          <span>Séniors Régionale 1</span>
+          <span>Séniors Régionale 2</span>
+          <span>U18</span>
+          <span>U15</span>
+        </div>
+
+        <div class="section-title">Offres de recrutement actives</div>
+        <div class="offer-card">
+          <div class="meta">
+            <h4>Ailier gauche — Séniors Régionale 1</h4>
+            <span>Publiée le 3 juillet · 5 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+        <div class="offer-card">
+          <div class="meta">
+            <h4>Entraîneur — Équipe U15</h4>
+            <span>Publiée le 28 juin · 4 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+        <div class="offer-card" style="margin-bottom: 32px">
+          <div class="meta">
+            <h4>Gardien de but — Séniors Régionale 1</h4>
+            <span>Publiée le 15 juin · 3 candidatures</span>
+          </div>
+          <span class="badge badge-active">Active</span>
+        </div>
+
+        <div class="reviews-block">
+          <span class="tag">Bientôt disponible</span>
+          Avis et réputation entre clubs et joueurs — activé une fois la base d'utilisateurs suffisante pour des retours fiables.
+        </div>
+
+        <div style="text-align:center; margin-bottom: 8px;">
+          <button class="btn btn-primary">Voir les offres et candidater</button>
+        </div>
+
+        <div class="report-link">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 2v16M4 3h11l-2 3 2 3H4" stroke="#3A5470" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          Signaler ce club
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Texte de consentement parental (brouillon)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F; --ink-soft: #3A5470; --paper: #FBFAF7; --panel: #F0EEE7; --line: #D8D4C8;
+    --orange: #FF5A1F; --orange-dark: #B33D12; --navy: #10263F;
+    --ok: #2F7D4F; --ok-bg: #E7F3EA; --warn: #B37B12; --warn-bg: #FBF1DD;
+    --refuse: #A32D2D; --refuse-bg: #FAEAEA; --protect: #5C4AB7; --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .display { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.05; }
+  h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 16px; }
+  .mono { font-family: 'Space Mono', monospace; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 32px; }
+
+  .cover { background: var(--protect); color: #F2F4F7; padding: 72px 0 52px; }
+  .cover .kicker { font-family: 'Space Mono'; font-size: 12.5px; color: #D3CBF0; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .cover h1 { font-size: 34px; margin: 0 0 14px; color: #fff; }
+  .cover p { font-size: 15px; color: #E7E1F7; max-width: 560px; margin: 0; }
+
+  .draft-banner { background: var(--refuse-bg); border-bottom: 2px solid var(--refuse); padding: 18px 0; }
+  .draft-banner .wrap { display: flex; gap: 14px; align-items: flex-start; }
+  .draft-banner svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+  .draft-banner b { display: block; color: var(--refuse); font-size: 14px; margin-bottom: 3px; }
+  .draft-banner p { margin: 0; font-size: 13.5px; color: #7A2323; }
+
+  .doc-body { padding: 52px 0 76px; }
+
+  /* Preview of the actual screen text */
+  .screen-preview {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 32px 36px; margin-bottom: 44px;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.06), 0 8px 24px rgba(16,38,63,0.06);
+  }
+  .screen-preview .tag { font-family: 'Space Mono'; font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 18px; }
+  .child-chip { display: inline-flex; align-items: center; gap: 10px; background: var(--panel); border-radius: 100px; padding: 7px 16px 7px 7px; margin-bottom: 20px; }
+  .child-chip .av { width: 30px; height: 30px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .child-chip span { font-size: 13.5px; font-weight: 600; }
+  .screen-preview h3 { text-align:center; font-size: 18px; margin: 0 0 8px; }
+  .screen-preview > p.lead { font-size: 13.5px; color: var(--ink-soft); text-align: center; margin: 0 0 26px; }
+
+  .consent-list { border: 1px solid var(--line); border-radius: 8px; padding: 4px 20px; margin-bottom: 8px; }
+  .consent-item { display: flex; align-items: flex-start; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .consent-item:last-child { border-bottom: none; }
+  .consent-item input { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; }
+  .consent-item .t-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .consent-item .t-sub { font-size: 12.5px; color: var(--ink-soft); }
+
+  article.art { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--line); }
+  article.art:last-child { border-bottom: none; }
+  article.art .art-num { font-family: 'Space Mono'; font-size: 12px; color: var(--orange-dark); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px; }
+  article.art h2 { font-size: 21px; margin: 0 0 16px; }
+  article.art p { font-size: 14.5px; color: var(--ink); margin: 0 0 12px; }
+  article.art ul { padding-left: 20px; margin: 0 0 12px; }
+  article.art li { font-size: 14.5px; margin-bottom: 8px; }
+
+  .note-inline { display: flex; gap: 10px; align-items: flex-start; border-radius: 6px; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+  .note-inline svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+  .note-protect { background: var(--protect-bg); color: #4A3D96; }
+  .note-legal { background: var(--warn-bg); color: var(--warn); }
+
+  .revoke-box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; margin: 14px 0; }
+  .revoke-box .t { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .revoke-box .d { font-size: 13.5px; color: var(--ink-soft); }
+
+  .signature-block { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px; margin-top: 8px; font-size: 13.5px; color: var(--ink-soft); }
+
+  footer { padding: 40px 0; text-align: center; }
+  footer p { font-size: 13px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">Brouillon de travail — v0.1</div>
+    <h1>Texte de consentement parental</h1>
+    <p>Contenu affiché au parent ou tuteur lors de la validation d'un profil mineur de moins de 15 ans</p>
+  </div>
+</div>
+
+<div class="draft-banner">
+  <div class="wrap">
+    <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#A32D2D" stroke-width="1.5"/><path d="M10 6v4.5" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14" r="1" fill="#A32D2D"/></svg>
+    <div>
+      <b>Brouillon de travail — pas un document juridique valide</b>
+      <p>Ce texte doit être relu par un avocat avant mise en ligne. Un point de vigilance particulier : les cases pré-cochées présentées dans la maquette d'origine doivent être décochées par défaut pour un consentement explicite conforme au RGPD — corrigé dans ce document.</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-body">
+  <div class="wrap">
+
+    <div class="screen-preview">
+      <span class="tag">Aperçu — écran affiché au parent</span>
+      <div class="child-chip"><div class="av">SB</div><span>Sophie B. · 15 ans</span></div>
+      <h3>Autorisation pour le profil de Sophie</h3>
+      <p class="lead">En tant que parent ou tuteur légal, votre accord est nécessaire pour activer ce profil sur HandMatch.</p>
+      <div class="consent-list">
+        <div class="consent-item">
+          <input type="checkbox">
+          <div>
+            <div class="t-title">Création du profil et traitement des données</div>
+            <div class="t-sub">Nom, âge, poste, localisation approximative, mobilité — conformément à notre politique de confidentialité</div>
+          </div>
+        </div>
+        <div class="consent-item">
+          <input type="checkbox">
+          <div>
+            <div class="t-title">Utilisation d'une photo de profil</div>
+            <div class="t-sub">Autorisation distincte requise pour tout affichage d'image de votre enfant. Cette case peut rester décochée sans empêcher l'activation du profil.</div>
+          </div>
+        </div>
+        <div class="consent-item">
+          <input type="checkbox">
+          <div>
+            <div class="t-title">Acceptation des conditions d'utilisation</div>
+            <div class="t-sub">Au nom de Sophie, en tant que représentant légal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <article class="art">
+      <span class="art-num">01</span>
+      <h2>Pourquoi ce message vous est envoyé</h2>
+      <p>Sophie B. a demandé la création d'un profil joueur sur HandMatch, une plateforme de mise en relation entre clubs, joueurs et entraîneurs de handball amateur. Comme elle a moins de 15 ans, la loi française impose qu'un parent ou tuteur donne son accord avant que ce profil puisse être activé.</p>
+      <p>Ce message ne signifie pas que le profil est déjà actif : tant que vous n'avez pas répondu, il reste invisible pour les autres utilisateurs de la Plateforme.</p>
+    </article>
+
+    <article class="art">
+      <span class="art-num">02</span>
+      <h2>Ce que vous autorisez, point par point</h2>
+
+      <h3 style="margin-bottom:6px">Traitement des données de votre enfant</h3>
+      <p>En cochant cette case, vous autorisez HandMatch à collecter et traiter les données nécessaires au fonctionnement du profil de Sophie : nom, âge, poste, localisation approximative, mobilité, historique de clubs. Le détail complet de ce traitement est disponible dans la politique de confidentialité.</p>
+
+      <h3 style="margin-bottom:6px">Utilisation d'une photo</h3>
+      <p>Cette autorisation est distincte de la précédente et strictement facultative. Sans elle, le profil de Sophie reste actif mais n'affiche pas de photo. Vous pouvez la donner ou la retirer à tout moment, indépendamment des autres autorisations.</p>
+
+      <div class="note-inline note-protect">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+        Le droit à l'image suit un régime juridique distinct du RGPD, plus strict. C'est pourquoi cette autorisation est demandée séparément et reste toujours facultative pour activer le profil.
+      </div>
+
+      <h3 style="margin-bottom:6px">Acceptation des conditions d'utilisation</h3>
+      <p>En cochant cette case, vous acceptez les CGU de HandMatch au nom de Sophie, en tant que représentant légal. Cela inclut notamment les règles de visibilité restreinte et de contact encadré décrites ci-dessous.</p>
+    </article>
+
+    <article class="art">
+      <span class="art-num">03</span>
+      <h2>Ce que ce profil pourra et ne pourra pas faire</h2>
+      <p>Une fois activé, le profil de Sophie bénéficie de protections spécifiques, appliquées automatiquement :</p>
+      <ul>
+        <li>Sa localisation exacte n'est jamais affichée — seule une zone approximative est visible</li>
+        <li>Son numéro de téléphone et son email ne sont jamais affichés publiquement</li>
+        <li>Aucun club ou utilisateur ne peut la contacter directement : tout message passe par vous, et vous êtes informé ou mis en copie de chaque prise de contact</li>
+        <li>Cette règle s'applique même si Sophie n'est rattachée à aucun club à un moment donné</li>
+      </ul>
+      <p>Vous pouvez à tout moment consulter le profil de Sophie, ou demander sa suspension ou sa suppression, en la contactant directement ou en écrivant à HandMatch.</p>
+    </article>
+
+    <article class="art">
+      <span class="art-num">04</span>
+      <h2>Revenir sur votre décision</h2>
+      <div class="revoke-box">
+        <div class="t">Vous pouvez retirer votre accord à tout moment</div>
+        <div class="d">Le retrait de votre consentement entraîne la désactivation immédiate du profil de Sophie. Les données déjà collectées sont supprimées ou anonymisées selon les délais prévus par notre politique de confidentialité, sauf obligation légale de conservation plus longue (par exemple en cas de signalement en cours).</div>
+      </div>
+      <p>Pour retirer votre accord, écrivez à [email de contact dédié à définir] en précisant le nom du profil concerné.</p>
+    </article>
+
+    <article class="art" style="border-bottom:none">
+      <span class="art-num">05</span>
+      <h2>Si vous refusez</h2>
+      <p>Si vous ne donnez pas votre accord, le profil de Sophie reste inactif et invisible. Aucune donnée au-delà de la demande initiale (email de contact que Sophie a renseigné) n'est conservée au-delà de [durée à définir, ex. 30 jours] en l'absence de réponse de votre part.</p>
+      <p>Sophie pourra retenter une demande ultérieurement, y compris avec une autre adresse email de parent ou tuteur si nécessaire.</p>
+    </article>
+
+    <div class="signature-block">
+      <strong style="color:var(--ink)">Points laissés en suspens dans ce brouillon, à trancher avant relecture juridique :</strong><br><br>
+      — Durée de conservation des données en cas d'absence de réponse du parent (proposé : 30 jours, à confirmer)<br>
+      — Adresse email dédiée pour le retrait de consentement<br>
+      — Modalité de vérification que la personne qui valide est bien un parent/tuteur (aucune vérification d'identité n'est prévue à ce stade — point à examiner avec un avocat, car c'est une limite connue de ce type de dispositif, y compris chez de nombreux services grand public)
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>HandMatch — Texte de consentement parental v0.1 · Brouillon de travail, non publiable en l'état</p>
+</footer>
+
+</body>
+</html>

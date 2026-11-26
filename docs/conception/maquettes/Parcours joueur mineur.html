@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Maquette parcours joueur mineur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F;
+    --ink-soft: #3A5470;
+    --paper: #FBFAF7;
+    --panel: #F0EEE7;
+    --line: #D8D4C8;
+    --orange: #FF5A1F;
+    --orange-dark: #B33D12;
+    --lime: #C6E21E;
+    --lime-dark: #5C6B0A;
+    --navy: #10263F;
+    --ok: #2F7D4F;
+    --ok-bg: #E7F3EA;
+    --warn: #B37B12;
+    --warn-bg: #FBF1DD;
+    --protect: #5C4AB7;
+    --protect-bg: #EFECFA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-steps { display: flex; justify-content: center; gap: 10px; margin-bottom: 56px; flex-wrap: wrap; }
+  .flow-steps span {
+    font-size: 12px; padding: 6px 12px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .flow-steps span.active { background: var(--protect); color: #fff; border-color: var(--protect); font-weight: 600; }
+
+  .screen-block { margin-bottom: 72px; }
+  .screen-label { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .screen-label .n { font-family: 'Anton', sans-serif; font-size: 20px; color: var(--protect); width: 32px; flex-shrink: 0; }
+  .screen-label h2 { font-size: 20px; margin: 0; }
+  .screen-label p { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 320px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-body { padding: 36px 40px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 560px; margin: 0 auto; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.span2 { grid-column: 1 / -1; }
+  .field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .field .hint { font-size: 12px; color: var(--ink-soft); }
+  .field input, .field select {
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 5px; font-size: 14px;
+    font-family: 'Inter', sans-serif; background: #FCFBF8;
+  }
+  .form-cta { text-align: center; margin-top: 28px; }
+  .btn { display: inline-block; padding: 12px 26px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-primary { background: var(--protect); color: #fff; }
+  .btn-outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+
+  .detect-box {
+    grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 10px;
+    background: var(--protect-bg); border: 1px solid #D3CBF0; border-radius: 6px; padding: 14px 16px;
+    font-size: 13px; color: #4A3D96; margin-top: 4px;
+  }
+  .detect-box .icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Parent consent screen */
+  .consent-card { max-width: 520px; margin: 0 auto; text-align: center; }
+  .child-chip { display: inline-flex; align-items: center; gap: 10px; background: var(--panel); border-radius: 100px;
+    padding: 8px 18px 8px 8px; margin-bottom: 20px; }
+  .child-chip .av { width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .child-chip span { font-size: 14px; font-weight: 600; }
+  .consent-card h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 19px; margin: 0 0 8px; }
+  .consent-card > p { font-size: 14px; color: var(--ink-soft); margin: 0 0 28px; }
+  .consent-list { text-align: left; border: 1px solid var(--line); border-radius: 8px; padding: 6px 20px; margin-bottom: 28px; }
+  .consent-item { display: flex; align-items: flex-start; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .consent-item:last-child { border-bottom: none; }
+  .consent-item input { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; }
+  .consent-item .t-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .consent-item .t-sub { font-size: 12px; color: var(--ink-soft); }
+  .consent-actions { display: flex; gap: 12px; justify-content: center; }
+
+  /* Protected profile screen */
+  .profile-view { max-width: 620px; margin: 0 auto; }
+  .protect-banner {
+    display: flex; align-items: center; gap: 10px; background: var(--protect-bg); color: #4A3D96;
+    border: 1px solid #D3CBF0; border-radius: 6px; padding: 12px 16px; font-size: 13px; margin-bottom: 24px;
+  }
+  .profile-head { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; }
+  .profile-head .ph-photo { width: 84px; height: 84px; border-radius: 50%; background: var(--panel);
+    display: flex; align-items: center; justify-content: center; color: var(--ink-soft); font-size: 12px; }
+  .profile-head h3 { font-family: 'Inter'; font-weight: 700; text-transform: none; font-size: 20px; margin: 0 0 4px; }
+  .profile-head .sub { font-size: 13px; color: var(--ink-soft); }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .info-row { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .info-row .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); margin-bottom: 4px; }
+  .info-row .v { font-size: 14px; font-weight: 600; }
+  .info-row .v.masked { color: var(--ink-soft); font-weight: 400; font-style: italic; }
+  .contact-box { border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; display: flex;
+    align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .contact-box .t-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .contact-box .t-sub { font-size: 12px; color: var(--ink-soft); }
+  .report-link { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft);
+    justify-content: center; padding-top: 6px; }
+  .report-link svg { flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Parcours joueur mineur</div>
+  <div class="flow-steps">
+    <span class="active">1. Inscription & détection de l'âge</span>
+    <span>2. Consentement parental</span>
+    <span>3. Profil protégé</span>
+  </div>
+
+  <!-- SCREEN 1 : Inscription -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">01</div>
+      <div>
+        <h2>Inscription — détection de l'âge</h2>
+        <p>Dès que la date de naissance indique un mineur de moins de 15 ans, le parcours bascule vers le consentement parental.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/inscription-joueur</div>
+      </div>
+      <div class="app-body">
+        <h3 style="text-align:center; font-family:'Inter'; font-weight:700; text-transform:none; font-size:19px; margin:0 0 28px;">Créer un profil joueur</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Prénom</label>
+            <input type="text" value="Sophie">
+          </div>
+          <div class="field">
+            <label>Nom</label>
+            <input type="text" value="B.">
+          </div>
+          <div class="field span2">
+            <label>Date de naissance</label>
+            <input type="text" value="14 / 03 / 2011">
+          </div>
+          <div class="detect-box">
+            <svg class="icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#4A3D96" stroke-width="1.5"/><path d="M10 6v5" stroke="#4A3D96" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="13.5" r="0.9" fill="#4A3D96"/></svg>
+            <div>Sophie a 15 ans. Un accord d'un parent ou tuteur est nécessaire avant l'activation du profil. Nous allons demander son email à l'étape suivante.</div>
+          </div>
+          <div class="field span2">
+            <label>Email du parent ou tuteur</label>
+            <span class="hint">Un lien de validation lui sera envoyé</span>
+            <input type="email" value="marie.b@exemple.fr">
+          </div>
+        </div>
+        <div class="form-cta">
+          <button class="btn btn-primary">Envoyer la demande d'autorisation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 : Consentement parental -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">02</div>
+      <div>
+        <h2>Validation par le parent</h2>
+        <p>Le parent reçoit un lien par email et donne ou refuse son accord, point par point.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/autorisation-parentale/9f2a1</div>
+      </div>
+      <div class="app-body">
+        <div class="consent-card">
+          <div class="child-chip">
+            <div class="av">SB</div>
+            <span>Sophie B. · 15 ans</span>
+          </div>
+          <h3>Autorisation pour le profil de Sophie</h3>
+          <p>En tant que parent ou tuteur légal, votre accord est nécessaire pour activer ce profil sur HandMatch.</p>
+          <div class="consent-list">
+            <div class="consent-item">
+              <input type="checkbox" checked>
+              <div>
+                <div class="t-title">Création du profil et traitement des données</div>
+                <div class="t-sub">Nom, âge, poste, localisation approximative, mobilité — conformément à notre politique de confidentialité</div>
+              </div>
+            </div>
+            <div class="consent-item">
+              <input type="checkbox" checked>
+              <div>
+                <div class="t-title">Utilisation d'une photo de profil</div>
+                <div class="t-sub">Autorisation distincte requise pour tout affichage d'image de votre enfant</div>
+              </div>
+            </div>
+            <div class="consent-item">
+              <input type="checkbox" checked>
+              <div>
+                <div class="t-title">Acceptation des conditions d'utilisation</div>
+                <div class="t-sub">Au nom de Sophie, en tant que représentant légal</div>
+              </div>
+            </div>
+          </div>
+          <div class="consent-actions">
+            <button class="btn btn-primary">Autoriser le profil</button>
+            <button class="btn btn-outline">Refuser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 : Profil protégé -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">03</div>
+      <div>
+        <h2>Profil actif — visibilité restreinte</h2>
+        <p>Une fois autorisé, le profil de Sophie est actif mais affiche moins d'informations qu'un profil majeur, et le contact passe par le parent plutôt que par un club — utile aussi pour un joueur qui n'est rattaché à aucun club à l'instant T.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/profil/sophie-b</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="profile-view">
+          <div class="protect-banner">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 2l7 3v5c0 4.4-3 7.5-7 8-4-0.5-7-3.6-7-8V5l7-3z" stroke="#4A3D96" stroke-width="1.4" fill="none"/></svg>
+            Profil protégé — visibilité restreinte activée pour les utilisateurs mineurs
+          </div>
+          <div class="profile-head">
+            <div class="ph-photo">Photo</div>
+            <div>
+              <h3>Sophie B.</h3>
+              <div class="sub">Gardienne de but · U18</div>
+            </div>
+          </div>
+          <div class="info-grid">
+            <div class="info-row">
+              <div class="k">Localisation</div>
+              <div class="v">Rouen (± 10 km)</div>
+            </div>
+            <div class="info-row">
+              <div class="k">Mobilité</div>
+              <div class="v">20 km</div>
+            </div>
+            <div class="info-row">
+              <div class="k">Téléphone</div>
+              <div class="v masked">Non affiché — profil mineur</div>
+            </div>
+            <div class="info-row">
+              <div class="k">Email</div>
+              <div class="v masked">Non affiché — profil mineur</div>
+            </div>
+          </div>
+          <div class="contact-box">
+            <div>
+              <div class="t-title">Contact encadré</div>
+              <div class="t-sub">Les échanges avec ce profil passent par le parent ou tuteur, informé et en copie de toute prise de contact</div>
+            </div>
+            <button class="btn btn-outline">Contacter via le parent</button>
+          </div>
+          <div class="report-link">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 2v16M4 3h11l-2 3 2 3H4" stroke="#3A5470" stroke-width="1.4" stroke-linejoin="round"/></svg>
+            Signaler ce profil ou un comportement suspect
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
