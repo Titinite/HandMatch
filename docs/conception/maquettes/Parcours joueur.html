@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>HandMatch — Maquette parcours joueur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10263F;
+    --ink-soft: #3A5470;
+    --paper: #FBFAF7;
+    --panel: #F0EEE7;
+    --line: #D8D4C8;
+    --orange: #FF5A1F;
+    --orange-dark: #B33D12;
+    --lime: #C6E21E;
+    --lime-dark: #5C6B0A;
+    --navy: #10263F;
+    --ok: #2F7D4F;
+    --ok-bg: #E7F3EA;
+    --warn: #B37B12;
+    --warn-bg: #FBF1DD;
+    --refuse: #A32D2D;
+    --refuse-bg: #FAEAEA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #E9E6DC; color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.5;
+    -webkit-font-smoothing: antialiased; padding: 48px 0 100px;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.5px;
+    text-transform: uppercase; line-height: 1.05;
+  }
+  .mono { font-family: 'Space Mono', monospace; }
+  .flow-wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .flow-title { text-align: center; margin-bottom: 8px; font-size: 15px; color: var(--ink-soft);
+    font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+  .flow-steps { display: flex; justify-content: center; gap: 10px; margin-bottom: 56px; flex-wrap: wrap; }
+  .flow-steps span {
+    font-size: 12px; padding: 6px 12px; border-radius: 100px; background: #fff;
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .flow-steps span.active { background: var(--orange); color: #fff; border-color: var(--orange); font-weight: 600; }
+
+  .screen-block { margin-bottom: 72px; }
+  .screen-label { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .screen-label .n { font-family: 'Anton', sans-serif; font-size: 20px; color: var(--orange); width: 32px; flex-shrink: 0; }
+  .screen-label h2 { font-size: 20px; margin: 0; }
+  .screen-label p { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+  .browser { background: #fff; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(16,38,63,0.08), 0 8px 24px rgba(16,38,63,0.08); border: 1px solid var(--line); }
+  .browser-bar { background: #F3F1EA; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+  .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; background: #D8D4C8; }
+  .browser-bar .url { margin-left: 8px; font-size: 12px; color: var(--ink-soft); font-family: 'Space Mono', monospace;
+    background: #fff; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); flex: 1; max-width: 300px; }
+  .app-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .app-nav .logo { display: flex; align-items: center; gap: 8px; font-family: 'Anton', sans-serif; font-size: 16px; }
+  .app-nav .logo svg { width: 22px; height: 22px; }
+  .app-nav .right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .app-body { padding: 36px 40px; }
+
+  /* Profile form */
+  .profile-layout { display: grid; grid-template-columns: 200px 1fr; gap: 32px; max-width: 720px; margin: 0 auto; }
+  .photo-col { text-align: center; }
+  .photo-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--panel); border: 2px dashed var(--line);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: var(--ink-soft); font-size: 12px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.span2 { grid-column: 1 / -1; }
+  .field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .field .hint { font-size: 12px; color: var(--ink-soft); }
+  .field input, .field select, .field textarea {
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 5px; font-size: 14px;
+    font-family: 'Inter', sans-serif; background: #FCFBF8;
+  }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; background: var(--panel);
+    border-radius: 6px; padding: 12px 16px; grid-column: 1 / -1; }
+  .toggle-row .t-label { font-size: 14px; font-weight: 600; }
+  .toggle-row .t-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .switch { width: 40px; height: 22px; background: var(--ok); border-radius: 100px; position: relative; flex-shrink: 0; }
+  .switch::after { content: ""; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 3px; right: 3px; }
+  .form-cta { text-align: center; margin-top: 28px; }
+  .btn { display: inline-block; padding: 12px 26px; border-radius: 4px; font-family: 'Anton', sans-serif;
+    font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; border: none; cursor: pointer; }
+  .btn-primary { background: var(--orange); color: #FFF7F2; }
+  .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .btn-sm { padding: 7px 14px; font-size: 11px; }
+
+  /* Search screen */
+  .search-layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; }
+  .filters { border-right: 1px solid var(--line); padding-right: 24px; }
+  .filters h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--ink-soft); margin: 0 0 14px; font-family: 'Inter'; font-weight: 700; }
+  .filter-group { margin-bottom: 20px; }
+  .filter-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .filter-group select, .filter-group input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font-size: 13px; background: #FCFBF8; }
+  .result-card { border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+  .result-card .meta h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; font-family: 'Inter'; }
+  .result-card .meta .tags { display: flex; gap: 6px; margin-top: 8px; }
+  .result-card .meta .tags span { font-size: 11px; background: var(--panel); padding: 3px 9px; border-radius: 100px; color: var(--ink-soft); }
+  .result-card .club-name { font-size: 12px; color: var(--orange-dark); font-weight: 600; margin-bottom: 4px; }
+
+  /* Application tracking */
+  .offer-summary { background: var(--panel); border-radius: 8px; padding: 20px 24px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .offer-summary h3 { font-size: 16px; margin: 0 0 4px; text-transform: none; font-family: 'Inter'; font-weight: 700; }
+  .offer-summary span { font-size: 13px; color: var(--ink-soft); }
+  .timeline { display: flex; flex-direction: column; gap: 0; max-width: 480px; margin: 0 auto; }
+  .tl-item { display: flex; gap: 16px; padding-bottom: 28px; position: relative; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ""; position: absolute; left: 11px; top: 26px; bottom: 0; width: 2px; background: var(--line); }
+  .tl-item:last-child::before { display: none; }
+  .tl-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--ok); display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; }
+  .tl-dot.pending { background: var(--line); }
+  .tl-text .tl-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .tl-text .tl-date { font-size: 12px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="flow-wrap">
+  <div class="flow-title">Parcours joueur</div>
+  <div class="flow-steps">
+    <span class="active">1. Profil</span>
+    <span>2. Recherche</span>
+    <span>3. Candidature & suivi</span>
+  </div>
+
+  <!-- SCREEN 1 : Profil -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">01</div>
+      <div>
+        <h2>Complétion du profil</h2>
+        <p>Karim renseigne son profil pour être visible des clubs qui recrutent.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/profil/modifier</div>
+      </div>
+      <div class="app-body">
+        <div class="profile-layout">
+          <div class="photo-col">
+            <div class="photo-circle">Photo</div>
+            <button class="btn btn-ghost btn-sm">Ajouter</button>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Prénom</label>
+              <input type="text" value="Karim">
+            </div>
+            <div class="field">
+              <label>Nom</label>
+              <input type="text" value="M.">
+            </div>
+            <div class="field">
+              <label>Âge</label>
+              <input type="text" value="24">
+            </div>
+            <div class="field">
+              <label>Poste</label>
+              <select><option>Ailier gauche</option></select>
+            </div>
+            <div class="field">
+              <label>Localisation</label>
+              <input type="text" value="Rouen">
+            </div>
+            <div class="field">
+              <label>Mobilité</label>
+              <input type="text" value="30 km">
+            </div>
+            <div class="field span2">
+              <label>Carrière / clubs</label>
+              <input type="text" value="US Sotteville (2019–2023), AS Elbeuf (2023–2026)">
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="t-label">En recherche active</div>
+                <div class="t-sub">Les clubs voient que vous êtes disponible dès maintenant</div>
+              </div>
+              <div class="switch"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-cta">
+          <button class="btn btn-primary">Enregistrer mon profil</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 : Recherche -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">02</div>
+      <div>
+        <h2>Recherche d'offres</h2>
+        <p>Filtrage par poste, localisation, mobilité et niveau.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/recherche/offres</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+        <div class="right">
+          <span>Karim M.</span>
+          <div class="avatar">KM</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="search-layout">
+          <div class="filters">
+            <h4>Filtres</h4>
+            <div class="filter-group">
+              <label>Poste</label>
+              <select><option>Ailier gauche</option></select>
+            </div>
+            <div class="filter-group">
+              <label>Localisation</label>
+              <input type="text" value="Rouen">
+            </div>
+            <div class="filter-group">
+              <label>Mobilité max</label>
+              <input type="text" value="30 km">
+            </div>
+            <div class="filter-group">
+              <label>Niveau</label>
+              <select><option>Toutes</option></select>
+            </div>
+          </div>
+          <div>
+            <div class="result-card">
+              <div class="meta">
+                <div class="club-name">AS HANDBALL ROUEN</div>
+                <h4>Ailier gauche — Séniors Régionale 1</h4>
+                <div class="tags"><span>12 km</span><span>Régionale 1</span><span>Publiée il y a 5 j</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm">Candidater</button>
+            </div>
+            <div class="result-card">
+              <div class="meta">
+                <div class="club-name">US SOTTEVILLE HANDBALL</div>
+                <h4>Ailier gauche / droit — Séniors Régionale 2</h4>
+                <div class="tags"><span>8 km</span><span>Régionale 2</span><span>Publiée il y a 2 j</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm">Candidater</button>
+            </div>
+            <div class="result-card">
+              <div class="meta">
+                <div class="club-name">CLUB HANDBALL ELBEUF</div>
+                <h4>Ailier gauche — Séniors Nationale 3</h4>
+                <div class="tags"><span>18 km</span><span>Nationale 3</span><span>Publiée il y a 1 sem</span></div>
+              </div>
+              <button class="btn btn-primary btn-sm">Candidater</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 : Candidature & suivi -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="n">03</div>
+      <div>
+        <h2>Suivi de candidature</h2>
+        <p>Karim suit l'avancement de sa candidature après l'avoir envoyée.</p>
+      </div>
+    </div>
+    <div class="browser">
+      <div class="browser-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="url">handmatch.fr/mes-candidatures/ailier-gauche-rouen</div>
+      </div>
+      <div class="app-nav">
+        <div class="logo">
+          <svg viewBox="0 0 30 30" fill="none"><circle cx="15" cy="15" r="14" stroke="#10263F" stroke-width="2"/><path d="M15 1 A14 14 0 0 1 15 29" stroke="#FF5A1F" stroke-width="2" fill="none"/><circle cx="15" cy="15" r="4" fill="#10263F"/></svg>
+          HandMatch
+        </div>
+        <div class="right">
+          <span>Karim M.</span>
+          <div class="avatar">KM</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="offer-summary">
+          <div>
+            <h3>Ailier gauche — Séniors Régionale 1</h3>
+            <span>AS Handball Rouen</span>
+          </div>
+          <span class="status status-pending" style="font-size:12px;font-weight:600;padding:5px 12px;border-radius:100px;background:#FBF1DD;color:#B37B12;">En attente</span>
+        </div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="tl-text">
+              <div class="tl-title">Candidature envoyée</div>
+              <div class="tl-date">12 juillet 2026</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"><svg width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="tl-text">
+              <div class="tl-title">Vue par le club</div>
+              <div class="tl-date">13 juillet 2026</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending"></div>
+            <div class="tl-text">
+              <div class="tl-title">Réponse du club</div>
+              <div class="tl-date">En attente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
