@@ -31,6 +31,15 @@ docker compose up --build --watch
 - `docker compose down -v` supprime aussi les données de la base.
 - Le code source est synchronisé dans les conteneurs (`--watch`) : pas de reconstruction pour une modification de code. Une modification de `package.json` ou du verrou déclenche une reconstruction automatique.
 
+### Base de données
+
+```bash
+docker compose exec backend npm run migrate:up   # applique les migrations
+docker compose exec backend npm run seed         # comptes de test (dev uniquement)
+```
+
+Conventions de schéma et guide des migrations : [`docs/database.md`](docs/database.md).
+
 ## Conventions
 
 ### Branches
