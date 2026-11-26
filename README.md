@@ -12,6 +12,25 @@ Plateforme web de mise en relation pour le handball amateur : recrutement de jou
 | `backend/` | API Node.js / Express |
 | `docs/` | Documentation et livrables de conception |
 
+## Lancer l'environnement de développement
+
+Prérequis : Docker Desktop (Compose v2.22 ou plus).
+
+```bash
+cp .env.example .env        # PowerShell : Copy-Item .env.example .env
+docker compose up --build --watch
+```
+
+| Service | URL |
+|---|---|
+| Frontend (Vue + Vite) | http://127.0.0.1:5173 |
+| Backend (Express) | http://127.0.0.1:3000/api/v1/health |
+| PostgreSQL | 127.0.0.1:5432 (accès local uniquement) |
+
+- `Ctrl+C` arrête la stack ; `docker compose down` supprime les conteneurs et conserve les données.
+- `docker compose down -v` supprime aussi les données de la base.
+- Le code source est synchronisé dans les conteneurs (`--watch`) : pas de reconstruction pour une modification de code. Une modification de `package.json` ou du verrou déclenche une reconstruction automatique.
+
 ## Conventions
 
 ### Branches
