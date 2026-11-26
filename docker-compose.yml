@@ -1,4 +1,4 @@
-# Environnement de dÃ©veloppement HandMatch.
+# Environnement de développement HandMatch.
 # Lancement : docker compose up --build --watch
 name: handmatch
 
@@ -47,6 +47,9 @@ services:
         - action: sync
           path: ./backend/src
           target: /app/src
+        - action: sync
+          path: ./backend/migrations
+          target: /app/migrations
         - action: rebuild
           path: ./backend/package.json
         - action: rebuild
