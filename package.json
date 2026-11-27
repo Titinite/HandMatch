@@ -1,0 +1,19 @@
+{
+  "name": "handmatch",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Outillage du dépôt HandMatch (hooks Git, qualité des commits)",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.2",
+    "prettier": "^3.10.1"
+  }
+}
