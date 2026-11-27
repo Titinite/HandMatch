@@ -1,12 +1,20 @@
-import express from "express";
+import { createApp } from "./app.js";
+import { config } from "./config/env.js";
+import { pool } from "./db/pool.js";
+import { logger } from "./utils/logger.js";
 
-const app = express();
-const port = Number(process.env.PORT ?? 3000);
+const app = createApp();
 
-app.get("/api/v1/health", (_req, res) => {
-  res.json({ status: "ok" });
+const server = app.listen(config.PORT, "0.0.0.0", () => {
+  logger.info(`Backend démarré sur le port ${config.PORT}`);
 });
 
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Backend démarré sur le port ${port}`);
-});
+function shutdown(signal: string): void {
+  logger.info(`Signal ${signal} reçu, arrêt en cours`);
+  server.close(() => {
+    void pool.end().then(() => process.exit(0));
+  });
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
