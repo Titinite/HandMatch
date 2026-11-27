@@ -64,6 +64,10 @@ Commandes du backend (`npm --prefix backend run <commande>`) :
 | `test`                    | Tests Vitest                            |
 | `build`                   | Compilation vers `dist/`                |
 
+## Décisions techniques
+
+Les décisions structurantes sont consignées dans [`docs/adr`](docs/adr/README.md) (ADR). Toute décision de ce type passe par un ADR, dans la même PR que le changement.
+
 ## Conventions
 
 ### Branches
