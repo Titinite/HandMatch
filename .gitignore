@@ -22,4 +22,5 @@ pgdata/
 Thumbs.db
 .idea/
 .vscode/*
+!.vscode/settings.json
 !.vscode/extensions.json

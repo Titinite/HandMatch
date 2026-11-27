@@ -1,0 +1,80 @@
+/*
+ * Tokens de design HandMatch. Source : charte graphique v1.0
+ * (docs/conception/charte-graphique).
+ *
+ * Ce fichier est le SEUL endroit où des valeurs de couleur brutes sont autorisées.
+ * Les composants n'utilisent que des variables (var(--color-...)).
+ */
+:root {
+  /* Couleurs de marque */
+  --color-ink: #10263f;
+  --color-ink-soft: #3a5470;
+  --color-navy: #10263f;
+  --color-paper: #fbfaf7;
+  --color-panel: #f0eee7;
+  --color-surface: #ffffff;
+  --color-line: #d8d4c8;
+  --color-orange: #ff5a1f;
+  --color-orange-dark: #b33d12;
+  --color-lime: #c6e21e;
+  --color-lime-dark: #5c6b0a;
+  --color-on-orange: var(--color-ink);
+  --color-on-dark: #f2f4f7;
+  --color-on-dark-soft: #b9c4d2;
+
+  /* Statuts (teintes du vert et de l'orange assombries par rapport � la charte, pour le contraste WCAG AA) */
+  --color-ok: #28704a;
+  --color-ok-bg: #e7f3ea;
+  --color-warn: #8f610d;
+  --color-warn-bg: #fbf1dd;
+  --color-refuse: #a32d2d;
+  --color-refuse-bg: #faeaea;
+
+  /*
+   * PROTECTION DES MINEURS : ces couleurs sont réservées EXCLUSIVEMENT
+   * aux signaux liés aux mineurs. Ne jamais les utiliser ailleurs.
+   */
+  --color-minor: #5c4ab7;
+  --color-minor-bg: #efecfa;
+  --color-minor-border: #d3cbf0;
+  --color-minor-text: #4a3d96;
+
+  /* Typographie : Anton (titres), Inter (texte), Space Mono (données) */
+  --font-display: "Anton", "Impact", sans-serif;
+  --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  --text-h1: 2.5rem;
+  --text-h2: 2.125rem;
+  --text-h3: 1.375rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-mono: 0.8125rem;
+
+  /* Espacements : base 4px */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Rayons */
+  --radius-button: 3px;
+  --radius-input: 5px;
+  --radius-card: 8px;
+  --radius-pill: 100px;
+
+  /* Mise en page */
+  --container-max: 1120px;
+  --container-padding: 16px;
+}
+
+/* Point de rupture unique de la charte : 860px (mobile-first, desktop à partir de 861px). */
+@media (min-width: 861px) {
+  :root {
+    --text-h1: 3.5rem;
+    --container-padding: 32px;
+  }
+}

@@ -12,6 +12,8 @@ Plateforme web de mise en relation pour le handball amateur : recrutement de jou
 | `backend/`  | API Node.js / Express                    |
 | `docs/`     | Documentation et livrables de conception |
 
+Frontend : pages dans src/pages, composants de base dans src/components/base, tokens de design dans src/assets/styles/tokens.css ; les blocs d'un composant suivent l'ordre template, script, style.
+
 ## Lancer l'environnement de développement
 
 Prérequis : Docker Desktop (Compose v2.22 ou plus).
@@ -47,6 +49,7 @@ Prérequis : Node 24 LTS sur la machine de développement (les hooks et les outi
 ```bash
 npm install                 # à la racine : installe les hooks Git (Husky)
 npm --prefix backend install
+npm --prefix frontend run <commande> : lint, format, typecheck, test, build
 ```
 
 À chaque commit, les hooks vérifient automatiquement :
@@ -63,6 +66,8 @@ Commandes du backend (`npm --prefix backend run <commande>`) :
 | `typecheck`               | Vérification TypeScript                 |
 | `test`                    | Tests Vitest                            |
 | `build`                   | Compilation vers `dist/`                |
+
+- **Éditeur** : les réglages VSCode du dépôt (`.vscode/`) activent le formatage Prettier et les corrections ESLint à l'enregistrement. Installe les extensions recommandées quand VSCode le propose.
 
 ## Décisions techniques
 

@@ -1,10 +1,11 @@
-<script setup lang="ts">
-const appName = "HandMatch";
-</script>
-
 <template>
-  <main>
-    <h1>{{ appName }}</h1>
-    <p>Environnement de développement opérationnel.</p>
-  </main>
+  <DefaultLayout>
+    <RouterView />
+  </DefaultLayout>
 </template>
+
+<script setup lang="ts">
+import { RouterView } from "vue-router";
+
+import DefaultLayout from "@/layouts/DefaultLayout.vue";
+</script>
