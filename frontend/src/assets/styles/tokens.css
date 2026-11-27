@@ -12,19 +12,20 @@
   --color-navy: #10263f;
   --color-paper: #fbfaf7;
   --color-panel: #f0eee7;
+  --color-surface: #ffffff;
   --color-line: #d8d4c8;
   --color-orange: #ff5a1f;
   --color-orange-dark: #b33d12;
   --color-lime: #c6e21e;
   --color-lime-dark: #5c6b0a;
-  --color-on-orange: #fff7f2;
+  --color-on-orange: var(--color-ink);
   --color-on-dark: #f2f4f7;
   --color-on-dark-soft: #b9c4d2;
 
-  /* Statuts */
-  --color-ok: #2f7d4f;
+  /* Statuts (teintes du vert et de l'orange assombries par rapport � la charte, pour le contraste WCAG AA) */
+  --color-ok: #28704a;
   --color-ok-bg: #e7f3ea;
-  --color-warn: #b37b12;
+  --color-warn: #8f610d;
   --color-warn-bg: #fbf1dd;
   --color-refuse: #a32d2d;
   --color-refuse-bg: #faeaea;

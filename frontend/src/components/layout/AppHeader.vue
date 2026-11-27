@@ -46,7 +46,10 @@ const route = useRoute();
 const ui = useUiStore();
 const { isMobileNavOpen } = storeToRefs(ui);
 
-const links = [{ to: "/", label: "Accueil" }];
+const links = [
+  { to: "/", label: "Accueil" },
+  ...(import.meta.env.DEV ? [{ to: "/design-system", label: "Design system" }] : []),
+];
 
 watch(
   () => route.fullPath,
