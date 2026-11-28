@@ -12,9 +12,11 @@ Plateforme web de mise en relation pour le handball amateur : recrutement de jou
 | `backend/`  | API Node.js / Express                    |
 | `docs/`     | Documentation et livrables de conception |
 
-Frontend : pages dans src/pages, composants de base dans src/components/base, tokens de design dans src/assets/styles/tokens.css ; les blocs d'un composant suivent l'ordre template, script, style.
+Frontend : pages dans `src/pages`, composants de base dans `src/components/base`, tokens de design dans `src/assets/styles/tokens.css` ; les blocs d'un composant suivent l'ordre template, script, style.
 
 ## Lancer l'environnement de développement
+
+Configuration, secrets et scan gitleaks : [`docs/configuration.md`](docs/configuration.md).
 
 Prérequis : Docker Desktop (Compose v2.22 ou plus).
 
